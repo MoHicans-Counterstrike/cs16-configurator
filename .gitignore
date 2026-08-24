@@ -1,0 +1,24 @@
+# node
+node_modules/
+dist/
+
+# env & secrets
+.env
+.env.*
+*.local
+
+# logs
+*.log
+npm-debug.log*
+
+# editor
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# os
+.DS_Store
+Thumbs.db
+
+# deploy helper (local only)
+npm-ssl.sh
