@@ -8,6 +8,7 @@ import {
   type Category,
 } from "./data/settings";
 import { cn } from "./utils/cn";
+import NetworkTicker from "./components/NetworkTicker";
 
 function SettingControl({
   setting,
@@ -263,6 +264,8 @@ export default function App() {
           </div>
         </div>
       </header>
+
+      <NetworkTicker />
 
       <div className="max-w-7xl mx-auto px-4 py-6">
         {/* Presets */}

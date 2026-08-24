@@ -1,0 +1,55 @@
+name: Deploy MOHICAN Configurator
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: true
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build (single-file)
+        run: npm run build
+
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy to VPS
+        run: |
+          ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "mkdir -p /home/ninja/cs16-config/images"
+          scp dist/index.html ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:/home/ninja/cs16-config/index.html
+          scp -r public/images/* ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:/home/ninja/cs16-config/images/ || true
+
+      - name: Restart status poller
+        run: |
+          ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} \
+            "systemctl --user restart mohican-status || true"
+
+      - name: Smoke test
+        run: |
+          sleep 2
+          code=$(curl -s -o /dev/null -w "%{http_code}" https://cfg.mohican.xyz/)
+          echo "https://cfg.mohican.xyz/ -> $code"
+          test "$code" = "200"
