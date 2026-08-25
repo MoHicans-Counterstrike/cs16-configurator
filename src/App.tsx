@@ -408,13 +408,13 @@ export default function App() {
         </div>
 
         {/* Tools sub-nav — LARGE, prominent tabs between action bar and content */}
-        <div className="mb-4 flex gap-2 flex-wrap">
+        <div className="mb-4 flex gap-2 flex-wrap relative z-40" style={{ minHeight: "48px" }}>
           <button
             onClick={() => setPageTab("config")}
             className={cn(
-              "px-5 py-2.5 text-sm font-mono uppercase tracking-wider transition-all rounded-lg border-2",
+              "px-6 py-3 text-base font-mono uppercase tracking-wider transition-all rounded-lg border-2 font-bold",
               pageTab === "config"
-                ? "bg-orange-500/20 border-orange-500 text-orange-100 shadow-[0_0_20px_rgba(251,146,60,0.2)]"
+                ? "bg-orange-500 text-white shadow-[0_0_25px_rgba(251,146,60,0.5)] border-orange-400"
                 : "bg-zinc-700 border-zinc-500 text-zinc-200 hover:text-white hover:border-zinc-300"
             )}
           >
@@ -423,9 +423,9 @@ export default function App() {
           <button
             onClick={() => setPageTab("binds")}
             className={cn(
-              "px-5 py-2.5 text-sm font-mono uppercase tracking-wider transition-all rounded-lg border-2",
+              "px-6 py-3 text-base font-mono uppercase tracking-wider transition-all rounded-lg border-2 font-bold",
               pageTab === "binds"
-                ? "bg-orange-500/20 border-orange-500 text-orange-100 shadow-[0_0_20px_rgba(251,146,60,0.2)]"
+                ? "bg-orange-500 text-white shadow-[0_0_25px_rgba(251,146,60,0.5)] border-orange-400"
                 : "bg-zinc-700 border-zinc-500 text-zinc-200 hover:text-white hover:border-zinc-300"
             )}
           >
@@ -434,9 +434,9 @@ export default function App() {
           <button
             onClick={() => setPageTab("rank")}
             className={cn(
-              "px-5 py-2.5 text-sm font-mono uppercase tracking-wider transition-all rounded-lg border-2",
+              "px-6 py-3 text-base font-mono uppercase tracking-wider transition-all rounded-lg border-2 font-bold",
               pageTab === "rank"
-                ? "bg-orange-500/20 border-orange-500 text-orange-100 shadow-[0_0_20px_rgba(251,146,60,0.2)]"
+                ? "bg-orange-500 text-white shadow-[0_0_25px_rgba(251,146,60,0.5)] border-orange-400"
                 : "bg-zinc-700 border-zinc-500 text-zinc-200 hover:text-white hover:border-zinc-300"
             )}
           >
@@ -445,9 +445,9 @@ export default function App() {
           <button
             onClick={() => setPageTab("demo")}
             className={cn(
-              "px-5 py-2.5 text-sm font-mono uppercase tracking-wider transition-all rounded-lg border-2",
+              "px-6 py-3 text-base font-mono uppercase tracking-wider transition-all rounded-lg border-2 font-bold",
               pageTab === "demo"
-                ? "bg-orange-500/20 border-orange-500 text-orange-100 shadow-[0_0_20px_rgba(251,146,60,0.2)]"
+                ? "bg-orange-500 text-white shadow-[0_0_25px_rgba(251,146,60,0.5)] border-orange-400"
                 : "bg-zinc-700 border-zinc-500 text-zinc-200 hover:text-white hover:border-zinc-300"
             )}
           >
@@ -456,9 +456,9 @@ export default function App() {
           <button
             onClick={() => setPageTab("netcode")}
             className={cn(
-              "px-5 py-2.5 text-sm font-mono uppercase tracking-wider transition-all rounded-lg border-2",
+              "px-6 py-3 text-base font-mono uppercase tracking-wider transition-all rounded-lg border-2 font-bold",
               pageTab === "netcode"
-                ? "bg-orange-500/20 border-orange-500 text-orange-100 shadow-[0_0_20px_rgba(251,146,60,0.2)]"
+                ? "bg-orange-500 text-white shadow-[0_0_25px_rgba(251,146,60,0.5)] border-orange-400"
                 : "bg-zinc-700 border-zinc-500 text-zinc-200 hover:text-white hover:border-zinc-300"
             )}
           >
