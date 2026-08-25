@@ -74,16 +74,19 @@ export default function CrosshairPreview({
         ))}
       </div>
 
-      {/* POV viewport — true 4:3, real screenshot */}
+      {/* POV viewport — true 4:3, real screenshot.
+          All 4 images are preloaded and kept in the DOM (visually hidden
+          when not active) so the initial render is instant on first switch. */}
       <div className="relative w-full overflow-hidden rounded-lg border border-zinc-700 shadow-inner shadow-black/60">
         <div className="relative" style={{ paddingBottom: "75%" }}>
-          {MAP_SCENES.filter((s) => s.id === scene).map((s) => (
+          {MAP_SCENES.map((s) => (
             <img
               key={s.id}
               src={s.src}
               alt={`CS 1.6 ${s.name} POV`}
               className="absolute inset-0 w-full h-full object-cover"
               draggable={false}
+              style={{ display: scene === s.id ? "block" : "none" }}
             />
           ))}
           {/* subtle vignette so crosshair pops */}

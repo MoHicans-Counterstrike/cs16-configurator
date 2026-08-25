@@ -174,7 +174,7 @@ export default function App() {
   });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const [activeTab, setActiveTab] = useState(categories[0].id);
-  const [pageTab, setPageTab] = useState<"config" | "binds" | "rank">("config");
+  const [pageTab, setPageTab] = useState<"config" | "binds" | "rank" | "demo">("config");
   const [copied, setCopied] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
   const [crtMode, setCrtMode] = useState<"off" | "mild" | "full">("mild");
@@ -331,50 +331,7 @@ export default function App() {
       </header>
 
       <div className="max-w-7xl mx-auto px-4 py-4">
-        {/* Page tabs */}
-        <div className="mb-3 flex gap-1 border-b border-zinc-800">
-          <button
-            onClick={() => setPageTab("config")}
-            className={cn(
-              "px-4 py-2 text-xs font-mono uppercase tracking-wider transition-colors border-b-2 -mb-px",
-              pageTab === "config"
-                ? "border-orange-500 text-orange-300"
-                : "border-transparent text-zinc-500 hover:text-zinc-300"
-            )}
-          >
-            Config Generator
-          </button>
-          <button
-            onClick={() => setPageTab("binds")}
-            className={cn(
-              "px-4 py-2 text-xs font-mono uppercase tracking-wider transition-colors border-b-2 -mb-px",
-              pageTab === "binds"
-                ? "border-orange-500 text-orange-300"
-                : "border-transparent text-zinc-500 hover:text-zinc-300"
-            )}
-          >
-            Binds &amp; Buy Menu
-          </button>
-          <button
-            onClick={() => setPageTab("rank")}
-            className={cn(
-              "px-4 py-2 text-xs font-mono uppercase tracking-wider transition-colors border-b-2 -mb-px",
-              pageTab === "rank"
-                ? "border-orange-500 text-orange-300"
-                : "border-transparent text-zinc-500 hover:text-zinc-300"
-            )}
-          >
-            Server Rangliste
-          </button>
-        </div>
-
-        {pageTab === "binds" ? (
-          <BindsBuilder />
-        ) : pageTab === "rank" ? (
-          <Leaderboard />
-        ) : (
-        <>
-        {/* Presets — single compact line */}
+        {/* Single compact bar: Presets — Counter (right) — CRT toggle */}
         <div className="mb-3 flex items-center gap-2 flex-wrap">
           <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">Presets:</span>
           <div className="flex gap-1.5 flex-wrap">
@@ -391,10 +348,26 @@ export default function App() {
             ))}
           </div>
           {downloadCount !== null && (
-            <span className="ml-auto text-[10px] text-orange-400/80 font-mono">
+            <span className="text-[10px] text-orange-400/80 font-mono">
               ⬇ {downloadCount.toLocaleString()} configs generated
             </span>
           )}
+          <button
+            onClick={() =>
+              setCrtMode((m) => (m === "off" ? "mild" : m === "mild" ? "full" : "off"))
+            }
+            title="CRT scanline effect (off / mild / full)"
+            className={cn(
+              "px-2.5 py-1 rounded text-xs font-mono border transition-colors ml-auto",
+              crtMode === "off"
+                ? "border-zinc-700 text-zinc-500"
+                : crtMode === "full"
+                ? "border-orange-500 text-orange-300 bg-orange-500/10"
+                : "border-zinc-600 text-zinc-400"
+            )}
+          >
+            📺 CRT: {crtMode.toUpperCase()}
+          </button>
         </div>
 
         {/* Action bar — prominent, always visible above the settings grid */}
@@ -423,26 +396,78 @@ export default function App() {
           </button>
           <div className="flex-1" />
           <button
-            onClick={() =>
-              setCrtMode((m) => (m === "off" ? "mild" : m === "mild" ? "full" : "off"))
-            }
-            title="Toggle CRT effect intensity"
-            className={cn(
-              "px-3 py-2 rounded border text-xs font-mono transition-colors",
-              crtMode === "full"
-                ? "border-orange-500/70 text-orange-300 bg-orange-500/10"
-                : "border-zinc-700 text-zinc-400 hover:text-amber-100"
-            )}
-          >
-            📺 CRT: {crtMode.toUpperCase()}
-          </button>
-          <button
             onClick={handleReset}
             className="px-3 py-2 rounded border border-zinc-700 hover:border-red-500/50 text-zinc-400 hover:text-red-300 text-xs font-mono transition-colors"
           >
             RESET
           </button>
         </div>
+
+        {/* Tools sub-nav — sit between the main action bar and the settings grid */}
+        <div className="mb-3 flex gap-1 border-b border-zinc-800 flex-wrap">
+          {([
+            { id: "config", label: "Config" },
+            { id: "binds", label: "Binds & Buy Menu" },
+            { id: "rank", label: "Rangliste" },
+            { id: "demo", label: "Demo Analyzer" },
+          ] as const).map((t) => (
+            <button
+              key={t.id}
+              onClick={() => setPageTab(t.id as any)}
+              className={cn(
+                "px-3 py-1.5 text-[11px] font-mono uppercase tracking-wider transition-colors border-b-2 -mb-px",
+                pageTab === t.id
+                  ? "border-orange-500 text-orange-300"
+                  : "border-transparent text-zinc-500 hover:text-zinc-300"
+              )}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+
+        {pageTab === "binds" ? (
+          <BindsBuilder />
+        ) : pageTab === "rank" ? (
+          <Leaderboard />
+        ) : pageTab === "demo" ? (
+          <div className="mb-4 grid md:grid-cols-2 gap-4">
+            <div>
+              <DemoUploader />
+              <p className="mt-3 text-[10px] font-mono text-zinc-600 leading-relaxed">
+                Drop any .dem from Counter-Strike (1.6, CZ, Condition Zero) or other GoldSrc
+                games (Half-Life, TFC, DoD). Header is read locally — nothing is uploaded.
+                We parse the 4-byte HLDEMO magic, demo protocol, netcode protocol, map
+                name, mod directory and engine directory.
+              </p>
+            </div>
+            <div className="bg-zinc-900/40 border border-zinc-800 rounded-lg p-4 text-[11px] font-mono text-zinc-500 space-y-2">
+              <p className="text-orange-400 text-xs uppercase tracking-wider">About CS 1.6 demos</p>
+              <p>
+                <code className="text-amber-300">.dem</code> files record every player's
+                actions on the server. Valve documented the format in the Half-Life SDK —
+                the 600-byte header carries map, mod and timing info; the body is a series
+                of "frames" (64/sec typical) with deltas of player positions, view angles,
+                shots, kills, chat, etc.
+              </p>
+              <p>
+                For full event extraction (K/D per player, chat history, round scores)
+                you'd want to use{" "}
+                <a
+                  href="https://github.com/YaLTeR/hldemo-rs"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-sky-400 underline decoration-dotted hover:text-sky-300"
+                >
+                  hldemo-rs
+                </a>{" "}
+                on the server side.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <></>
+        )}
 
         <div className="grid lg:grid-cols-[260px_1fr_380px] gap-4">
           {/* Left nav */}
@@ -601,8 +626,6 @@ export default function App() {
             </a>
           </p>
         </footer>
-        </>
-        )}
       </div>
     </div>
   );
