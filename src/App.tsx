@@ -169,6 +169,7 @@ export default function App() {
     }
     return initial;
   });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const [activeTab, setActiveTab] = useState(categories[0].id);
   const [copied, setCopied] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
@@ -237,6 +238,8 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-zinc-950 text-amber-50 font-sans relative overflow-x-hidden">
+      <NetworkTicker />
+
       {/* Scanline overlay for CRT vibe */}
       <div
         className="fixed inset-0 pointer-events-none z-50"
@@ -278,32 +281,29 @@ export default function App() {
         <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-zinc-950/20" />
         <div className="relative max-w-7xl mx-auto px-4 py-8 sm:py-10 min-h-[420px] sm:min-h-[500px] lg:min-h-[560px] flex items-end">
           <div className="w-full flex items-end justify-between flex-wrap gap-6">
-            <div className="max-w-3xl">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-center text-xl sm:text-2xl font-black text-zinc-950 shadow-[0_0_30px_rgba(251,146,60,0.4)]">
+            <div className="min-w-0">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-9 h-9 rounded bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-content text-lg font-black text-zinc-950 shadow-[0_0_25px_rgba(251,146,60,0.4)] flex-shrink-0">
                   1.6
                 </div>
-                <span className="text-xs sm:text-sm text-orange-400 font-mono tracking-[0.24em] uppercase">
+                <span className="text-[10px] sm:text-xs text-orange-400 font-mono tracking-[0.24em] uppercase">
                   Mohicans competitive command center
                 </span>
               </div>
-              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-amber-50 leading-tight">
-                THE MOHICAN CS 1.6 PRO SETTINGS CONFIGURATOR
+              <h1 className="text-lg sm:text-2xl lg:text-3xl font-bold tracking-tight text-amber-50 leading-none whitespace-nowrap overflow-hidden text-ellipsis">
+                THE MOHICAN <span className="text-orange-500">CS 1.6</span> CONFIGURATOR
               </h1>
-              <p className="text-zinc-300 text-sm sm:text-base max-w-2xl mt-3">
-                Build a tournament-grade Counter-Strike 1.6 config optimized for FPS, hit registration,
-                and pure competitive performance. Based on settings used by CS legends.
+              <p className="text-zinc-400 text-xs sm:text-sm max-w-2xl mt-1.5">
+                Tournament-grade autoexec.cfg — FPS, hit registration, pure competitive performance.
               </p>
             </div>
             {downloadCount !== null && (
-              <div className="flex flex-col items-start sm:items-end gap-1">
-                <div className="px-4 py-2 rounded-lg bg-gradient-to-br from-orange-500/15 to-transparent border border-orange-500/30 text-center">
-                  <div className="text-2xl font-black font-mono text-orange-300 leading-none">
-                    {downloadCount.toLocaleString()}
-                  </div>
-                  <div className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider mt-1">
-                    configs generated
-                  </div>
+              <div className="px-3 py-1.5 rounded-lg bg-gradient-to-br from-orange-500/15 to-transparent border border-orange-500/30 text-center flex-shrink-0">
+                <div className="text-xl font-black font-mono text-orange-300 leading-none">
+                  {downloadCount.toLocaleString()}
+                </div>
+                <div className="text-[9px] font-mono text-zinc-500 uppercase tracking-wider mt-0.5">
+                  configs generated
                 </div>
               </div>
             )}
@@ -311,35 +311,28 @@ export default function App() {
         </div>
       </header>
 
-      <NetworkTicker />
-
-      <div className="max-w-7xl mx-auto px-4 py-6">
-        {/* Presets */}
-        <div className="mb-6">
-          <div className="flex items-center gap-2 mb-3 flex-wrap">
-            <span className="text-xs font-mono text-zinc-500 uppercase tracking-wider">Presets:</span>
-            <div className="flex gap-2 flex-wrap">
-              {presets.map((preset) => (
-                <button
-                  key={preset.id}
-                  onClick={() => handlePreset(preset.id)}
-                  title={preset.description}
-                  className="group relative px-3 py-1.5 rounded border border-zinc-700 hover:border-orange-500 bg-zinc-900/50 hover:bg-zinc-900 text-zinc-300 hover:text-amber-100 text-xs font-mono transition-all flex items-center gap-2"
-                >
-                  <span>{preset.icon}</span>
-                  <span>{preset.name}</span>
-                </button>
-              ))}
-            </div>
+      <div className="max-w-7xl mx-auto px-4 py-4">
+        {/* Presets — single compact line */}
+        <div className="mb-3 flex items-center gap-2 flex-wrap">
+          <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">Presets:</span>
+          <div className="flex gap-1.5 flex-wrap">
+            {presets.map((preset) => (
+              <button
+                key={preset.id}
+                onClick={() => handlePreset(preset.id)}
+                title={preset.description}
+                className="group relative px-2.5 py-1 rounded border border-zinc-700 hover:border-orange-500 bg-zinc-900/50 hover:bg-zinc-900 text-zinc-300 hover:text-amber-100 text-xs font-mono transition-all flex items-center gap-1.5"
+              >
+                <span>{preset.icon}</span>
+                <span>{preset.name}</span>
+              </button>
+            ))}
           </div>
-          <p className="text-xs text-zinc-500 italic">
-            Click a preset to load a pro-verified configuration. You can customize further after.
-            {downloadCount !== null && (
-              <span className="ml-2 text-orange-400/80 font-mono not-italic">
-                ⬇ {downloadCount.toLocaleString()} configs generated
-              </span>
-            )}
-          </p>
+          {downloadCount !== null && (
+            <span className="ml-auto text-[10px] text-orange-400/80 font-mono">
+              ⬇ {downloadCount.toLocaleString()} configs generated
+            </span>
+          )}
         </div>
 
         {/* Action bar — prominent, always visible above the settings grid */}
@@ -495,39 +488,25 @@ export default function App() {
           </aside>
         </div>
 
-        {/* Footer tips */}
-        <div className="mt-8 grid md:grid-cols-3 gap-4">
-          <div className="bg-zinc-900/40 border border-zinc-800 rounded-lg p-4">
-            <div className="text-orange-500 font-mono text-xs uppercase mb-2">Launch Options</div>
-            <code className="text-xs text-amber-100 font-mono block bg-black/40 rounded p-2 break-all">
-              -game cstrike -width 1024 -height 768 -freq 144 -novid -console -nojoy +fps_max 0
-            </code>
-            <p className="text-xs text-zinc-500 mt-2">Right-click CS 1.6 in Steam → Properties → Launch Options</p>
-          </div>
-          <div className="bg-zinc-900/40 border border-zinc-800 rounded-lg p-4">
-            <div className="text-orange-500 font-mono text-xs uppercase mb-2">Console Commands</div>
-            <code className="text-xs text-amber-100 font-mono block bg-black/40 rounded p-2 space-y-0.5">
-              <div>exec autoexec</div>
-              <div>echo "Config loaded!"</div>
-              <div>writeip</div>
-            </code>
-            <p className="text-xs text-zinc-500 mt-2">Open console with ~ key to run these.</p>
-          </div>
-          <div className="bg-zinc-900/40 border border-zinc-800 rounded-lg p-4">
-            <div className="text-orange-500 font-mono text-xs uppercase mb-2">Mouse Setup</div>
-            <ul className="text-xs text-zinc-400 space-y-1">
-              <li>• Disable "Enhance pointer precision"</li>
-              <li>• Set DPI: 400–800 (pro standard)</li>
-              <li>• 1000Hz polling rate</li>
-              <li>• eDPI = DPI × sensitivity</li>
-              <li>• Target eDPI: ~880 (ideal)</li>
-            </ul>
-          </div>
+        {/* Footer tips — single compact strip */}
+        <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 items-center bg-zinc-900/40 border border-zinc-800 rounded-lg px-4 py-3 text-[11px] font-mono text-zinc-500">
+          <span>
+            <span className="text-orange-400 uppercase">Launch:</span>{" "}
+            <code className="text-amber-100">-novid -console -freq 144 +fps_max 0</code>
+          </span>
+          <span>
+            <span className="text-orange-400 uppercase">Install:</span> cstrike/ folder →{" "}
+            <code className="text-amber-100">exec autoexec</code>
+          </span>
+          <span className="ml-auto">
+            <span className="text-orange-400 uppercase">Mouse:</span> raw input on · 400–800 DPI · 1000Hz ·
+            eDPI ~880
+          </span>
         </div>
 
-        <footer className="mt-8 pb-8 text-center">
-          <p className="text-xs text-zinc-600 font-mono">
-            // THE MOHICAN CS 1.6 PRO SETTINGS CONFIGURATOR · BUILT FOR COMPETITORS · 2000—2026
+        <footer className="mt-3 pb-4 text-center">
+          <p className="text-[10px] text-zinc-700 font-mono">
+            // MOHICAN CS 1.6 CONFIGURATOR · BUILT FOR COMPETITORS · cfg.mohican.xyz
           </p>
         </footer>
       </div>
