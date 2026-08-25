@@ -31,7 +31,7 @@ export default function Leaderboard() {
   if (!entries || entries.length === 0) {
     return (
       <div className="bg-zinc-900/40 border border-zinc-800 rounded-lg p-8 text-center">
-        <p className="text-sm font-mono text-zinc-500">
+        <p className="text-sm font-mono text-zinc-300">
           No players ranked yet — the tracker samples the server every minute.
           <br />
           <span className="text-orange-400">Hop on cs1.mohican.xyz and frag!</span>
@@ -46,8 +46,8 @@ export default function Leaderboard() {
     <div className="bg-zinc-900/40 border border-zinc-800 rounded-lg overflow-hidden">
       <div className="px-4 py-3 border-b border-zinc-800 bg-zinc-900/80 flex items-center justify-between flex-wrap gap-2">
         <div>
-          <p className="text-xs font-mono text-zinc-500 uppercase tracking-wider">Server Rangliste</p>
-          <p className="text-[10px] text-zinc-500 mt-0.5">
+          <p className="text-xs font-mono text-zinc-300 uppercase tracking-wider">Server Rangliste</p>
+          <p className="text-[10px] text-zinc-300 mt-0.5">
             top {Math.min(entries.length, 50)} by frags · sampled every 60s
             {updated && ` · updated ${new Date(updated).toLocaleTimeString()}`}
           </p>

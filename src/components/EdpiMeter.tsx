@@ -17,7 +17,7 @@ export default function EdpiMeter({ sensitivity }: { sensitivity: number }) {
   return (
     <div className="bg-zinc-900/50 border border-zinc-800 rounded-lg p-4 mt-4">
       <div className="flex items-baseline justify-between mb-2">
-        <span className="text-xs font-mono text-zinc-500 uppercase tracking-wider">eDPI Calculator</span>
+        <span className="text-xs font-mono text-zinc-300 uppercase tracking-wider">eDPI Calculator</span>
         <span className="font-mono text-2xl font-black text-amber-300">{edpi}</span>
       </div>
       {/* meter */}

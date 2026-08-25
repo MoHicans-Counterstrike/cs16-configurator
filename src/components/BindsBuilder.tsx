@@ -136,7 +136,7 @@ export default function BindsBuilder() {
                   ? t === "CT"
                     ? "bg-sky-500/15 border-sky-500/50 text-sky-300"
                     : "bg-amber-500/15 border-amber-500/50 text-amber-300"
-                  : "border-zinc-700 text-zinc-500 hover:text-zinc-300"
+                  : "border-zinc-700 text-zinc-300 hover:text-zinc-300"
               )}
             >
               {t === "CT" ? "🔵 Counter-Terrorist" : "🟡 Terrorist"}
@@ -164,7 +164,7 @@ export default function BindsBuilder() {
         )}
 
         {/* keyboard layout */}
-        <p className="text-xs font-mono text-zinc-500 mb-2">
+        <p className="text-xs font-mono text-zinc-300 mb-2">
           Click a key → add weapons to it. Click SHIFT/CTRL/ALT for combinations.
         </p>
         <div className="space-y-1.5 mb-3">
@@ -189,7 +189,7 @@ export default function BindsBuilder() {
                         ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-300"
                         : isModifier
                         ? "border-violet-500/40 bg-violet-500/5 text-violet-300"
-                        : "border-zinc-700 text-zinc-400 hover:border-zinc-500 hover:text-zinc-200"
+                        : "border-zinc-700 text-zinc-300 hover:border-zinc-500 hover:text-zinc-200"
                     )}
                     title={hasBind || "empty"}
                   >
@@ -204,7 +204,7 @@ export default function BindsBuilder() {
         {/* weapon selection */}
         {editingKey ? (
           <div className="border-t border-zinc-800 pt-3">
-            <p className="text-xs font-mono text-zinc-400 mb-2">
+            <p className="text-xs font-mono text-zinc-300 mb-2">
               Editing: <span className="text-orange-300">{getFullKeyName()}</span>
             </p>
             <div className="flex gap-1.5 flex-wrap mb-3">
@@ -220,7 +220,7 @@ export default function BindsBuilder() {
               ))}
               <button
                 onClick={() => setBinds((prev) => ({ ...prev, [editingKey]: "" }))}
-                className="px-2.5 py-1.5 rounded border border-zinc-700 hover:border-red-500/50 text-[10px] font-mono text-zinc-500 hover:text-red-300 transition-colors"
+                className="px-2.5 py-1.5 rounded border border-zinc-700 hover:border-red-500/50 text-[10px] font-mono text-zinc-300 hover:text-red-300 transition-colors"
               >
                 clear
               </button>
@@ -252,7 +252,7 @@ export default function BindsBuilder() {
       {/* Right: current binds */}
       <div className="bg-zinc-900/40 border border-zinc-800 rounded-lg p-4">
         <div className="flex items-center justify-between mb-3">
-          <p className="text-xs font-mono text-zinc-400">Active binds</p>
+          <p className="text-xs font-mono text-zinc-300">Active binds</p>
           <span className="text-[10px] font-mono text-emerald-400">${teamTotal}</span>
         </div>
         <div className="space-y-1 max-h-[420px] overflow-y-auto pr-1">
@@ -268,7 +268,7 @@ export default function BindsBuilder() {
                   <span className="text-[10px] font-mono text-orange-300 w-20 flex-shrink-0">
                     {key}
                   </span>
-                  <span className="text-[10px] font-mono text-zinc-400 truncate flex-1">
+                  <span className="text-[10px] font-mono text-zinc-300 truncate flex-1">
                     {val}
                   </span>
                   <button

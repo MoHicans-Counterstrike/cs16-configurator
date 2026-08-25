@@ -83,7 +83,7 @@ export default function NetworkTicker() {
         >
           <Dot ok={cs.online} />
           <span className="text-orange-500 font-bold uppercase tracking-wider">CS</span>
-          <span className="text-zinc-500 ml-1.5">{csLabel}</span>
+          <span className="text-zinc-300 ml-1.5">{csLabel}</span>
         </a>
 
         <FadeDivider />
@@ -95,7 +95,7 @@ export default function NetworkTicker() {
         >
           <Dot ok={ts.online} />
           <span className="text-sky-400 font-bold uppercase tracking-wider">TS</span>
-          <span className="text-zinc-500 ml-1.5 truncate max-w-[180px]">{tsLabel}</span>
+          <span className="text-zinc-300 ml-1.5 truncate max-w-[180px]">{tsLabel}</span>
         </a>
 
         <FadeDivider />
@@ -109,7 +109,7 @@ export default function NetworkTicker() {
         >
           <Dot ok={true} />
           <span className="text-violet-400 font-bold uppercase tracking-wider">IRC</span>
-          <span className="text-zinc-500 ml-1.5">#mohicans</span>
+          <span className="text-zinc-300 ml-1.5">#mohicans</span>
         </a>
       </div>
     </div>

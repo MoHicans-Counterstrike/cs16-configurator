@@ -24,10 +24,10 @@ export default function NetcodeCalc() {
   return (
     <div className="grid md:grid-cols-2 gap-4">
       <div className="bg-zinc-900/40 border border-zinc-800 rounded-lg p-4">
-        <p className="text-xs font-mono text-zinc-400 uppercase tracking-wider mb-3">Netcode Calculator</p>
+        <p className="text-xs font-mono text-zinc-300 uppercase tracking-wider mb-3">Netcode Calculator</p>
         <div className="space-y-3">
           <div>
-            <label className="text-[10px] font-mono text-zinc-500 block mb-1">rate (bytes/sec)</label>
+            <label className="text-[10px] font-mono text-zinc-300 block mb-1">rate (bytes/sec)</label>
             <input
               type="range"
               min="5000"
@@ -37,14 +37,14 @@ export default function NetcodeCalc() {
               onChange={(e) => setRate(Number(e.target.value))}
               className="w-full accent-orange-500"
             />
-            <div className="flex justify-between text-[10px] font-mono text-zinc-500">
+            <div className="flex justify-between text-[10px] font-mono text-zinc-300">
               <span>5k</span>
               <span className="text-orange-300">{rate.toLocaleString()} ({bandwidth.toFixed(1)} KB/s)</span>
               <span>100k</span>
             </div>
           </div>
           <div>
-            <label className="text-[10px] font-mono text-zinc-500 block mb-1">cl_cmdrate (packets/sec to server)</label>
+            <label className="text-[10px] font-mono text-zinc-300 block mb-1">cl_cmdrate (packets/sec to server)</label>
             <input
               type="range"
               min="30"
@@ -54,14 +54,14 @@ export default function NetcodeCalc() {
               onChange={(e) => setCmdrate(Number(e.target.value))}
               className="w-full accent-orange-500"
             />
-            <div className="flex justify-between text-[10px] font-mono text-zinc-500">
+            <div className="flex justify-between text-[10px] font-mono text-zinc-300">
               <span>30</span>
               <span className="text-orange-300">{cmdrate}</span>
               <span>101</span>
             </div>
           </div>
           <div>
-            <label className="text-[10px] font-mono text-zinc-500 block mb-1">cl_updaterate (packets/sec from server)</label>
+            <label className="text-[10px] font-mono text-zinc-300 block mb-1">cl_updaterate (packets/sec from server)</label>
             <input
               type="range"
               min="30"
@@ -71,14 +71,14 @@ export default function NetcodeCalc() {
               onChange={(e) => setUpdaterate(Number(e.target.value))}
               className="w-full accent-orange-500"
             />
-            <div className="flex justify-between text-[10px] font-mono text-zinc-500">
+            <div className="flex justify-between text-[10px] font-mono text-zinc-300">
               <span>30</span>
               <span className="text-orange-300">{updaterate}</span>
               <span>101</span>
             </div>
           </div>
           <div>
-            <label className="text-[10px] font-mono text-zinc-500 block mb-1">ex_interp (0 = auto)</label>
+            <label className="text-[10px] font-mono text-zinc-300 block mb-1">ex_interp (0 = auto)</label>
             <input
               type="range"
               min="0"
@@ -88,7 +88,7 @@ export default function NetcodeCalc() {
               onChange={(e) => setCustomInterp(Number(e.target.value))}
               className="w-full accent-orange-500"
             />
-            <div className="flex justify-between text-[10px] font-mono text-zinc-500">
+            <div className="flex justify-between text-[10px] font-mono text-zinc-300">
               <span>0 (auto)</span>
               <span className="text-orange-300">{customInterp.toFixed(3)}</span>
               <span>0.1</span>
@@ -96,13 +96,13 @@ export default function NetcodeCalc() {
           </div>
         </div>
         <div className="mt-3 pt-3 border-t border-zinc-800">
-          <p className="text-[10px] font-mono text-zinc-500 mb-1">Presets</p>
+          <p className="text-[10px] font-mono text-zinc-300 mb-1">Presets</p>
           <div className="flex gap-1.5 flex-wrap">
             {presets.map((p) => (
               <button
                 key={p.name}
                 onClick={() => { setRate(p.rate); setCmdrate(p.cmd); setUpdaterate(p.up); setCustomInterp(0); }}
-                className="px-2 py-1 rounded border border-zinc-700 hover:border-orange-500/50 text-[10px] font-mono text-zinc-400 hover:text-orange-300 transition-colors"
+                className="px-2 py-1 rounded border border-zinc-700 hover:border-orange-500/50 text-[10px] font-mono text-zinc-300 hover:text-orange-300 transition-colors"
               >
                 {p.name}
               </button>
@@ -112,27 +112,27 @@ export default function NetcodeCalc() {
       </div>
 
       <div className="bg-zinc-900/40 border border-zinc-800 rounded-lg p-4">
-        <p className="text-xs font-mono text-zinc-400 uppercase tracking-wider mb-3">Result</p>
+        <p className="text-xs font-mono text-zinc-300 uppercase tracking-wider mb-3">Result</p>
         <div className="space-y-2 text-[11px] font-mono">
           <div className="flex justify-between">
-            <span className="text-zinc-500">ex_interp (auto)</span>
+            <span className="text-zinc-300">ex_interp (auto)</span>
             <span className="text-emerald-400">{autoInterp}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-zinc-500">interpolation</span>
+            <span className="text-zinc-300">interpolation</span>
             <span className="text-orange-300">{(interp * 1000).toFixed(1)}ms</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-zinc-500">bandwidth</span>
+            <span className="text-zinc-300">bandwidth</span>
             <span className="text-sky-400">{bandwidth.toFixed(1)} KB/s</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-zinc-500">update interval</span>
+            <span className="text-zinc-300">update interval</span>
             <span className="text-amber-300">{(1000 / updaterate).toFixed(1)}ms</span>
           </div>
         </div>
         <div className="mt-4 p-3 rounded bg-zinc-900/60 border border-zinc-800">
-          <p className="text-[10px] font-mono text-zinc-500 mb-1">Copy to autoexec.cfg:</p>
+          <p className="text-[10px] font-mono text-zinc-300 mb-1">Copy to autoexec.cfg:</p>
           <code className="text-[10px] font-mono text-emerald-300 block whitespace-pre-wrap">
 {`rate "${rate}"
 cl_cmdrate "${cmdrate}"

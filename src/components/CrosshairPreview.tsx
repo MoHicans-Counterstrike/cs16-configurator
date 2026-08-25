@@ -66,7 +66,7 @@ export default function CrosshairPreview({
               "px-2 py-1 rounded text-[10px] font-mono border transition-colors uppercase",
               scene === s.id
                 ? "border-orange-500 text-orange-300 bg-orange-500/10"
-                : "border-zinc-700 text-zinc-500 hover:text-zinc-300"
+                : "border-zinc-700 text-zinc-300 hover:text-zinc-300"
             )}
           >
             {s.name}

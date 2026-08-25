@@ -46,30 +46,30 @@ export default function DemoUploader() {
         }}
       />
       {!info ? (
-        <div className="text-xs font-mono text-zinc-500">
+        <div className="text-xs font-mono text-zinc-300">
           <span className="text-orange-400">drop a .dem</span> or click — GoldSrc demo header analysis,
           runs 100% locally
         </div>
       ) : info.valid ? (
         <div className="text-left text-[11px] font-mono space-y-0.5">
           <div className="flex justify-between gap-2">
-            <span className="text-zinc-500">file</span>
+            <span className="text-zinc-300">file</span>
             <span className="text-amber-100 truncate max-w-[200px]">{fileName}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-zinc-500">map</span>
+            <span className="text-zinc-300">map</span>
             <span className="text-orange-300">{info.map}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-zinc-500">mod</span>
+            <span className="text-zinc-300">mod</span>
             <span className="text-sky-300">{info.gameDir}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-zinc-500">net proto</span>
+            <span className="text-zinc-300">net proto</span>
             <span className="text-zinc-300">{info.netProtocol}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-zinc-500">size</span>
+            <span className="text-zinc-300">size</span>
             <span className="text-zinc-300">{((info.sizeBytes ?? 0) / 1024 / 1024).toFixed(1)} MB</span>
           </div>
         </div>

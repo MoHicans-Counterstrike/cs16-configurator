@@ -45,10 +45,10 @@ export default function ConfigUploader({ onApply }: { onApply: (values: Record<s
 
   return (
     <div className="bg-zinc-900/40 border border-zinc-800 rounded-lg p-4">
-      <p className="text-xs font-mono text-zinc-400 uppercase tracking-wider mb-2">
+      <p className="text-xs font-mono text-zinc-300 uppercase tracking-wider mb-2">
         Upload your config
       </p>
-      <p className="text-[10px] font-mono text-zinc-500 mb-3 leading-relaxed">
+      <p className="text-[10px] font-mono text-zinc-300 mb-3 leading-relaxed">
         Drop a <code className="text-amber-300">.cfg</code> file (autoexec.cfg, config.cfg,
         userconfig.cfg) — your values are parsed and applied to the generator. 100% local.
       </p>
@@ -64,7 +64,7 @@ export default function ConfigUploader({ onApply }: { onApply: (values: Record<s
       />
       <button
         onClick={() => inputRef.current?.click()}
-        className="w-full px-4 py-3 rounded border border-dashed border-zinc-600 hover:border-orange-500/50 bg-zinc-900/30 hover:bg-zinc-900/60 text-zinc-400 hover:text-orange-300 text-xs font-mono transition-all"
+        className="w-full px-4 py-3 rounded border border-dashed border-zinc-600 hover:border-orange-500/50 bg-zinc-900/30 hover:bg-zinc-900/60 text-zinc-300 hover:text-orange-300 text-xs font-mono transition-all"
       >
         ↓ click to upload .cfg
       </button>

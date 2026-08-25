@@ -38,7 +38,7 @@ function StoryCard({ id, anchor }: { id: string; anchor: DOMRect }) {
         <ProAvatar name={l.name} clan={l.team} size={32} />
         <div className="min-w-0">
           <div className="font-bold text-sm text-amber-100 truncate">{l.name}</div>
-          <div className="text-[10px] font-mono text-zinc-500">
+          <div className="text-[10px] font-mono text-zinc-300">
             {l.realName} · {l.era}
           </div>
         </div>
@@ -46,8 +46,8 @@ function StoryCard({ id, anchor }: { id: string; anchor: DOMRect }) {
       <div className="text-xs font-semibold text-orange-400 mb-1">
         {l.role} · {l.team}
       </div>
-      <p className="text-[11px] text-zinc-400 leading-relaxed mb-2">{l.claim}</p>
-      <div className="pt-2 border-t border-zinc-800 grid grid-cols-2 gap-x-3 gap-y-0.5 text-[10px] font-mono text-zinc-500">
+      <p className="text-[11px] text-zinc-300 leading-relaxed mb-2">{l.claim}</p>
+      <div className="pt-2 border-t border-zinc-800 grid grid-cols-2 gap-x-3 gap-y-0.5 text-[10px] font-mono text-zinc-300">
         <span>sens {String(l.overrides.sensitivity)}</span>
         <span>eDPI {l.edpi}</span>
         <span>{String(l.overrides.resolution)}</span>
@@ -70,8 +70,8 @@ export default function LegendsSidebar({ onLoad }: { onLoad: (id: string) => voi
 
       <div className="mt-4 bg-zinc-900/50 border border-zinc-800 rounded-lg overflow-visible backdrop-blur">
         <div className="px-3 py-2.5 border-b border-zinc-800 bg-zinc-900/80 rounded-t-lg">
-          <p className="text-xs font-mono text-zinc-500 uppercase tracking-wider">Golden Era Legends</p>
-          <p className="text-[10px] text-zinc-500 mt-0.5">{legends.length} pros · by clan</p>
+          <p className="text-xs font-mono text-zinc-300 uppercase tracking-wider">Golden Era Legends</p>
+          <p className="text-[10px] text-zinc-300 mt-0.5">{legends.length} pros · by clan</p>
         </div>
         <div className="p-2">
           {legendGroups.map((group) => {
@@ -80,7 +80,7 @@ export default function LegendsSidebar({ onLoad }: { onLoad: (id: string) => voi
             return (
               <div key={group.clan} className="mb-2 last:mb-0">
                 <div className="px-1 pt-1.5 pb-1 flex items-center gap-1.5">
-                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-zinc-400">
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-zinc-300">
                     {group.clan}
                   </span>
                   <span className="ml-auto text-[9px] font-mono text-zinc-600">{members.length}</span>
@@ -109,7 +109,7 @@ export default function LegendsSidebar({ onLoad }: { onLoad: (id: string) => voi
                       )}
                     >
                       <ProAvatar name={l!.name} clan={group.clan} size={40} />
-                      <div className="mt-0.5 text-center text-[8px] font-mono text-zinc-500 leading-none">
+                      <div className="mt-0.5 text-center text-[8px] font-mono text-zinc-300 leading-none">
                         {l!.name}
                       </div>
                     </button>

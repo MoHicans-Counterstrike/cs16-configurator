@@ -84,7 +84,7 @@ function SettingControl({
         />
         <div className="font-mono text-amber-300 bg-zinc-900 border border-zinc-700 rounded px-2 py-1 min-w-[60px] text-center text-sm">
           {numVal}
-          {setting.unit && <span className="text-zinc-500 ml-0.5 text-xs">{setting.unit}</span>}
+          {setting.unit && <span className="text-zinc-300 ml-0.5 text-xs">{setting.unit}</span>}
         </div>
       </div>
     );
@@ -123,7 +123,7 @@ function SettingRow({ setting, value, onChange }: { setting: any; value: any; on
               </button>
             )}
           </div>
-          <p className="text-zinc-400 text-xs mt-1 leading-relaxed">{setting.description}</p>
+          <p className="text-zinc-300 text-xs mt-1 leading-relaxed">{setting.description}</p>
         </div>
         <div className="lg:flex-shrink-0 flex items-center">
           <SettingControl setting={setting} value={value} onChange={onChange} />
@@ -149,7 +149,7 @@ function CategoryPanel({
           <span className="text-3xl">{category.icon}</span>
           <div>
             <h2 className="text-xl font-bold text-amber-100">{category.name}</h2>
-            <p className="text-zinc-400 text-sm">{category.description}</p>
+            <p className="text-zinc-300 text-sm">{category.description}</p>
           </div>
         </div>
       </div>
@@ -307,7 +307,7 @@ export default function App() {
               <h1 className="text-lg sm:text-2xl lg:text-3xl font-bold tracking-tight text-amber-50 leading-none whitespace-nowrap overflow-hidden text-ellipsis">
                 THE MOHICAN <span className="text-orange-500">CS 1.6</span> CONFIGURATOR
               </h1>
-              <p className="text-zinc-400 text-xs sm:text-sm max-w-2xl mt-1.5">
+              <p className="text-zinc-300 text-xs sm:text-sm max-w-2xl mt-1.5">
                 Tournament-grade autoexec.cfg — FPS, hit registration, pure competitive performance.
               </p>
             </div>
@@ -318,7 +318,7 @@ export default function App() {
       <div className="max-w-7xl mx-auto px-4 py-4">
         {/* Single compact bar: Presets — Counter (right) — CRT toggle */}
         <div className="mb-3 flex items-center gap-2 flex-wrap">
-          <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">Presets:</span>
+          <span className="text-[10px] font-mono text-zinc-300 uppercase tracking-wider">Presets:</span>
           <div className="flex gap-1.5 flex-wrap">
             {presets.map((preset) => (
               <button
@@ -346,10 +346,10 @@ export default function App() {
               className={cn(
                 "px-2.5 py-1 rounded text-xs font-mono border transition-colors",
                 crtMode === "off"
-                  ? "border-zinc-700 text-zinc-500"
+                  ? "border-zinc-700 text-zinc-300"
                   : crtMode === "full"
                   ? "border-orange-500 text-orange-300 bg-orange-500/10"
-                  : "border-zinc-600 text-zinc-400"
+                  : "border-zinc-600 text-zinc-300"
               )}
             >
               📺 CRT: {crtMode.toUpperCase()}
@@ -359,7 +359,7 @@ export default function App() {
 
         {/* Action bar — prominent, always visible above the settings grid */}
         <div className="mb-4 flex gap-2 flex-wrap items-center bg-zinc-900/60 border border-zinc-700 rounded-lg px-3 py-2.5 sticky top-0 z-30 backdrop-blur">
-          <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mr-1 hidden sm:inline">
+          <span className="text-[10px] font-mono text-zinc-300 uppercase tracking-widest mr-1 hidden sm:inline">
             Actions
           </span>
           <button
@@ -384,7 +384,7 @@ export default function App() {
           <div className="flex-1" />
           <button
             onClick={handleReset}
-            className="px-3 py-2 rounded border border-zinc-700 hover:border-red-500/50 text-zinc-400 hover:text-red-300 text-xs font-mono transition-colors"
+            className="px-3 py-2 rounded border border-zinc-700 hover:border-red-500/50 text-zinc-300 hover:text-red-300 text-xs font-mono transition-colors"
           >
             RESET
           </button>
@@ -406,7 +406,7 @@ export default function App() {
                 "px-4 py-2 text-xs font-mono uppercase tracking-wider transition-colors border-b-2 -mb-px whitespace-nowrap",
                 pageTab === t.id
                   ? "border-orange-500 text-orange-300"
-                  : "border-transparent text-zinc-500 hover:text-zinc-300"
+                  : "border-transparent text-zinc-300 hover:text-zinc-300"
               )}
             >
               {t.label}
@@ -425,12 +425,12 @@ export default function App() {
           <div className="grid md:grid-cols-2 gap-4">
             <div>
               <DemoUploader />
-              <p className="mt-3 text-[10px] font-mono text-zinc-500 leading-relaxed">
+              <p className="mt-3 text-[10px] font-mono text-zinc-300 leading-relaxed">
                 Drop any .dem from Counter-Strike (1.6, CZ, Condition Zero) or other GoldSrc
                 games. Header is read locally — nothing is uploaded.
               </p>
             </div>
-            <div className="bg-zinc-900/40 border border-zinc-800 rounded-lg p-4 text-[11px] font-mono text-zinc-400 space-y-2">
+            <div className="bg-zinc-900/40 border border-zinc-800 rounded-lg p-4 text-[11px] font-mono text-zinc-300 space-y-2">
               <p className="text-orange-400 text-xs uppercase tracking-wider">About CS 1.6 demos</p>
               <p>
                 <code className="text-amber-300">.dem</code> files record every player's
@@ -455,27 +455,27 @@ export default function App() {
         <>
         {/* Action bar */}
         <div className="mb-4 flex gap-2 flex-wrap items-center bg-zinc-900/60 border border-zinc-700 rounded-lg px-3 py-2.5 sticky top-0 z-30 backdrop-blur">
-          <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mr-1 hidden sm:inline">Actions</span>
+          <span className="text-[10px] font-mono text-zinc-300 uppercase tracking-widest mr-1 hidden sm:inline">Actions</span>
           <button onClick={handleDownload} className="px-5 py-2 rounded bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-400 hover:to-amber-400 text-zinc-950 font-bold text-sm transition-all shadow-[0_0_20px_rgba(251,146,60,0.35)]">↓ DOWNLOAD autoexec.cfg</button>
           <button onClick={handleCopy} className="px-4 py-2 rounded border border-orange-500/50 hover:bg-orange-500/10 text-orange-300 hover:text-orange-200 text-sm font-mono transition-colors">{copied ? "✓ COPIED" : "COPY CONFIG"}</button>
           <button onClick={handleShare} className="px-4 py-2 rounded border border-sky-500/50 hover:bg-sky-500/10 text-sky-300 hover:text-sky-200 text-sm font-mono transition-colors" title="Copy a link that restores this exact config">{shareCopied ? "✓ LINK COPIED" : "🔗 SHARE"}</button>
           <div className="flex-1" />
-          <button onClick={handleReset} className="px-3 py-2 rounded border border-zinc-700 hover:border-red-500/50 text-zinc-400 hover:text-red-300 text-xs font-mono transition-colors">RESET</button>
+          <button onClick={handleReset} className="px-3 py-2 rounded border border-zinc-700 hover:border-red-500/50 text-zinc-300 hover:text-red-300 text-xs font-mono transition-colors">RESET</button>
         </div>
 
         <div className="grid lg:grid-cols-[260px_1fr_380px] gap-4">
           <nav className="lg:sticky lg:top-4 lg:self-start h-fit">
             <div className="bg-zinc-900/50 border border-zinc-800 rounded-lg overflow-hidden backdrop-blur">
               <div className="px-4 py-3 border-b border-zinc-800 bg-zinc-900/80">
-                <p className="text-xs font-mono text-zinc-500 uppercase tracking-wider">Categories</p>
+                <p className="text-xs font-mono text-zinc-300 uppercase tracking-wider">Categories</p>
               </div>
               <div className="p-2">
                 {categories.map((cat) => (
-                  <button key={cat.id} onClick={() => setActiveTab(cat.id)} className={cn("w-full text-left px-3 py-2.5 rounded flex items-center gap-3 mb-1 transition-all group", activeTab === cat.id ? "bg-gradient-to-r from-orange-500/20 to-transparent border-l-2 border-orange-500 text-amber-100" : "hover:bg-zinc-800/50 text-zinc-400 hover:text-amber-100")}>
+                  <button key={cat.id} onClick={() => setActiveTab(cat.id)} className={cn("w-full text-left px-3 py-2.5 rounded flex items-center gap-3 mb-1 transition-all group", activeTab === cat.id ? "bg-gradient-to-r from-orange-500/20 to-transparent border-l-2 border-orange-500 text-amber-100" : "hover:bg-zinc-800/50 text-zinc-300 hover:text-amber-100")}>
                     <span className="text-xl">{cat.icon}</span>
                     <div className="flex-1 min-w-0">
                       <div className="font-medium text-sm">{cat.name}</div>
-                      <div className="text-xs text-zinc-500 truncate">{cat.description}</div>
+                      <div className="text-xs text-zinc-300 truncate">{cat.description}</div>
                     </div>
                   </button>
                 ))}
@@ -484,7 +484,7 @@ export default function App() {
             <LegendsSidebar onLoad={handleLegend} />
             <div className="mt-4 bg-gradient-to-br from-orange-500/10 to-transparent border border-orange-500/20 rounded-lg p-4">
               <div className="text-xs font-mono text-orange-400 uppercase mb-2">Quick Install</div>
-              <ol className="text-xs text-zinc-400 space-y-1.5 font-mono list-decimal list-inside">
+              <ol className="text-xs text-zinc-300 space-y-1.5 font-mono list-decimal list-inside">
                 <li>Download autoexec.cfg</li>
                 <li>Move to cstrike/ folder</li>
                 <li>Launch with -console</li>
@@ -502,8 +502,8 @@ export default function App() {
           <aside className="lg:sticky lg:top-4 lg:self-start h-fit space-y-4">
             <div className="bg-zinc-900/50 border border-zinc-800 rounded-lg overflow-hidden backdrop-blur">
               <div className="px-4 py-3 border-b border-zinc-800 bg-zinc-900/80">
-                <p className="text-xs font-mono text-zinc-500 uppercase tracking-wider">Crosshair Preview</p>
-                <p className="text-xs text-zinc-400 mt-0.5">live — changes with HUD settings</p>
+                <p className="text-xs font-mono text-zinc-300 uppercase tracking-wider">Crosshair Preview</p>
+                <p className="text-xs text-zinc-300 mt-0.5">live — changes with HUD settings</p>
               </div>
               <div className="p-3">
                 <CrosshairPreview size={String(values["cl_crosshair_size"] ?? "small")} color={String(values["cl_crosshair_color"] ?? "50 250 50")} translucent={Number(values["cl_crosshair_translucent"] ?? 0)} dynamic={!!values["cl_dynamiccrosshair"]} />
@@ -514,14 +514,14 @@ export default function App() {
             <div className="bg-zinc-900/50 border border-zinc-800 rounded-lg overflow-hidden backdrop-blur">
               <div className="px-4 py-3 border-b border-zinc-800 bg-zinc-900/80 flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-mono text-zinc-500 uppercase tracking-wider">Live Config</p>
-                  <p className="text-xs text-zinc-400 mt-0.5">autoexec.cfg</p>
+                  <p className="text-xs font-mono text-zinc-300 uppercase tracking-wider">Live Config</p>
+                  <p className="text-xs text-zinc-300 mt-0.5">autoexec.cfg</p>
                 </div>
                 <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse shadow-[0_0_10px_rgba(251,146,60,0.6)]" />
               </div>
               <pre className="p-4 text-xs font-mono text-amber-100/80 leading-relaxed max-h-[70vh] overflow-auto whitespace-pre-wrap break-all">
                 <code>{config.split("\n").map((line, i) => {
-                  if (line.startsWith("//")) return <div key={i} className="text-zinc-500">{line}</div>;
+                  if (line.startsWith("//")) return <div key={i} className="text-zinc-300">{line}</div>;
                   const [cmd, ...rest] = line.split(/\s+/);
                   if (!cmd) return <div key={i}>&nbsp;</div>;
                   return <div key={i}><span className="text-orange-400">{cmd}</span> <span className="text-amber-100/60">{rest.join(" ")}</span></div>;
@@ -534,7 +534,7 @@ export default function App() {
         )}
 
         {/* Footer tips — single compact strip */}
-        <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 items-center bg-zinc-900/40 border border-zinc-800 rounded-lg px-4 py-3 text-[11px] font-mono text-zinc-500">
+        <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 items-center bg-zinc-900/40 border border-zinc-800 rounded-lg px-4 py-3 text-[11px] font-mono text-zinc-300">
           <span>
             <span className="text-orange-400 uppercase">Launch:</span>{" "}
             <code className="text-amber-100">-novid -console -freq 144 +fps_max 0</code>
