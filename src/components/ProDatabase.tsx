@@ -1,16 +1,34 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { cn } from "../utils/cn";
 import { legends } from "../data/legends";
+
+// Pro Database — sorted by clan like the start page
+const CLANS = [
+  { name: "SK Gaming", ids: ["heaton", "spawn", "walle", "fisker", "ahl"] },
+  { name: "fnatic / NiP", ids: ["f0rest", "getright", "gux", "dsn", "carn", "friberg", "xizt"] },
+  { name: "Natus Vincere", ids: ["markeloff", "edward", "zeus", "starix"] },
+  { name: "Team 3D / compLexity (NA)", ids: ["ksharp", "rambo", "volcano"] },
+  { name: "mTw / Nordic", ids: ["solo"] },
+  { name: "Pre-1.6 era", ids: ["pottt", "medion", "elemeNt"] },
+  { name: "International", ids: ["cyx", "roman"] },
+];
 
 export default function ProDatabase() {
   const [selected, setSelected] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const player = legends.find((l) => l.id === selected);
 
-  const filtered = legends.filter((l) => {
-    const q = search.toLowerCase();
-    return !q || l.name.toLowerCase().includes(q) || l.team.toLowerCase().includes(q) || l.realName.toLowerCase().includes(q);
-  });
+  const filteredClans = CLANS.map((clan) => ({
+    ...clan,
+    players: clan.ids
+      .map((id) => legends.find((l) => l.id === id))
+      .filter((l) => {
+        if (!l) return false;
+        if (!search) return true;
+        const q = search.toLowerCase();
+        return l.name.toLowerCase().includes(q) || l.team.toLowerCase().includes(q);
+      }),
+  })).filter((clan) => clan.players.length > 0);
 
   return (
     <div className="grid md:grid-cols-[320px_1fr] gap-4">
@@ -18,39 +36,38 @@ export default function ProDatabase() {
         <div className="mb-3">
           <input
             type="text"
-            placeholder="Search player or team..."
+            placeholder="Search player..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full bg-zinc-800 border border-zinc-700 rounded px-3 py-2 text-xs font-mono text-zinc-200 placeholder:text-zinc-500 focus:outline-none focus:border-orange-500"
           />
         </div>
-        <div className="space-y-1 max-h-[500px] overflow-y-auto pr-1">
-          {filtered.length === 0 && (
-            <p className="text-xs font-mono text-zinc-500 italic">No results</p>
-          )}
-          {filtered.map((p) => (
-            <button
-              key={p.id}
-              onClick={() => setSelected(p.id)}
-              className={cn(
-                "w-full text-left px-3 py-2.5 rounded border transition-all",
-                selected === p.id
-                  ? "border-orange-500 bg-orange-500/10 text-orange-200"
-                  : "border-zinc-800 text-zinc-300 hover:border-zinc-600"
-              )}
-            >
-              <div className="flex items-center gap-2">
-                <span className="text-lg">{p.icon}</span>
-                <div className="flex-1 min-w-0">
-                  <div className="text-xs font-mono font-bold truncate">{p.name}</div>
-                  <div className="text-[10px] text-zinc-400 truncate">{p.team} · {p.era}</div>
-                </div>
+        <div className="space-y-3 max-h-[500px] overflow-y-auto pr-1">
+          {filteredClans.map((clan) => (
+            <div key={clan.name}>
+              <p className="text-[10px] font-mono text-orange-400 uppercase tracking-wider mb-1">{clan.name}</p>
+              <div className="space-y-0.5">
+                {clan.players.map((p) => p && (
+                  <button
+                    key={p.id}
+                    onClick={() => setSelected(p.id)}
+                    className={cn(
+                      "w-full text-left px-3 py-2 rounded border transition-all flex items-center gap-2",
+                      selected === p.id
+                        ? "border-orange-500 bg-orange-500/10 text-orange-200"
+                        : "border-zinc-800 text-zinc-300 hover:border-zinc-600"
+                    )}
+                  >
+                    <span className="text-lg">{p.icon}</span>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-xs font-mono font-bold truncate">{p.name}</div>
+                      <div className="text-[10px] text-zinc-400 truncate">{p.team}</div>
+                    </div>
+                  </button>
+                ))}
               </div>
-            </button>
+            </div>
           ))}
-        </div>
-        <div className="mt-3 pt-3 border-t border-zinc-800">
-          <p className="text-[10px] font-mono text-zinc-500">{legends.length} pros · community-documented settings</p>
         </div>
       </div>
 
@@ -80,9 +97,6 @@ export default function ProDatabase() {
                 </div>
               ))}
             </div>
-            <p className="mt-3 text-[10px] font-mono text-zinc-500">
-              Approximate settings based on community research (cfg dumps, interviews). Exact values may vary.
-            </p>
           </>
         ) : (
           <div className="text-center py-12">
