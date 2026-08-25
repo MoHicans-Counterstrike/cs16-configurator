@@ -20,13 +20,13 @@ export default function ServerBrowser() {
         // Try to fetch from our status poller endpoint
         const res = await fetch("/status.json");
         const data = await res.json();
-        if (data?.cs16) {
+        if (data?.cs) {
           setServer({
-            online: data.cs16.online,
-            map: data.cs16.map || "unknown",
-            players: data.cs16.players || 0,
-            maxPlayers: data.cs16.maxPlayers || 16,
-            ping: data.cs16.ping || 0,
+            online: data.cs.online,
+            map: data.cs.map || "unknown",
+            players: data.cs.players || 0,
+            maxPlayers: data.cs.maxPlayers || 16,
+            ping: data.cs.ping || 0,
           });
         }
       } catch {
