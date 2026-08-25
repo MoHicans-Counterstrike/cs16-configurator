@@ -25,6 +25,7 @@ import NetGraphAnalyzer from "./components/NetGraphAnalyzer";
 import CrosshairGallery from "./components/CrosshairGallery";
 import ServerBrowser from "./components/ServerBrowser";
 import RoundTimer from "./components/RoundTimer";
+import TeamSpeakEmbed from "./components/TeamSpeakEmbed";
 import { encodeState, decodeState } from "./utils/urlState";
 import { getLegendById } from "./data/legends";
 
@@ -184,7 +185,7 @@ export default function App() {
   });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const [activeTab, setActiveTab] = useState(categories[0].id);
-  const [pageTab, setPageTab] = useState<"config" | "binds" | "rank" | "demo" | "netcode" | "launch" | "proconfigs" | "prodb" | "weapons" | "netgraph" | "crosshair" | "server" | "timer">("config");
+  const [pageTab, setPageTab] = useState<"config" | "binds" | "rank" | "demo" | "netcode" | "launch" | "proconfigs" | "prodb" | "weapons" | "netgraph" | "crosshair" | "server" | "ts3" | "timer">("config");
   const [copied, setCopied] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
   const [crtMode, setCrtMode] = useState<"off" | "mild" | "full">("mild");
@@ -329,15 +330,16 @@ export default function App() {
           {([
             { id: "config", label: "Config" },
             { id: "binds", label: "Binds & Buy" },
-            { id: "rank", label: "Rangliste" },
-            { id: "demo", label: "Demo" },
+            { id: "server", label: "Server" },
+            { id: "rank", label: "Ranks" },
+            { id: "demo", label: "Demo Analyzer" },
             { id: "netcode", label: "Netcode" },
             { id: "launch", label: "Launch Options" },
             { id: "prodb", label: "Pro Database" },
             { id: "weapons", label: "Weapons" },
             { id: "netgraph", label: "Net Graph" },
             { id: "crosshair", label: "Crosshair" },
-            { id: "server", label: "Server" },
+            { id: "ts3", label: "TeamSpeak" },
             { id: "timer", label: "Timer" },
           ] as const).map((t) => (
             <button
@@ -379,6 +381,7 @@ export default function App() {
         {pageTab === "netgraph" && <NetGraphAnalyzer />}
         {pageTab === "crosshair" && <CrosshairGallery />}
         {pageTab === "server" && <ServerBrowser />}
+        {pageTab === "ts3" && <TeamSpeakEmbed />}
         {pageTab === "timer" && <RoundTimer />}
 
         {pageTab === "config" && (

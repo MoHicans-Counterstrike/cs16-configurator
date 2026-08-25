@@ -46,7 +46,7 @@ export default function Leaderboard() {
     <div className="bg-zinc-900/40 border border-zinc-800 rounded-lg overflow-hidden">
       <div className="px-4 py-3 border-b border-zinc-800 bg-zinc-900/80 flex items-center justify-between flex-wrap gap-2">
         <div>
-          <p className="text-xs font-mono text-zinc-300 uppercase tracking-wider">Server Rangliste</p>
+          <p className="text-xs font-mono text-zinc-300 uppercase tracking-wider">Server Ranks</p>
           <p className="text-[10px] text-zinc-300 mt-0.5">
             top {Math.min(entries.length, 50)} by frags · sampled every 60s
             {updated && ` · updated ${new Date(updated).toLocaleTimeString()}`}
