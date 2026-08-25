@@ -278,28 +278,22 @@ export default function App() {
         }}
       />
 
-      {/* Mohicans brand banner — image anchored to TOP edge, fades into content below */}
-      <header className="relative min-h-[240px] sm:min-h-[280px] lg:min-h-[320px] bg-zinc-950">
-        {/* image container is NOT clipped: it overflows below the header and
-            fades into the content area. Top edge stays flush with the header top. */}
-        {/* image is taller than header and anchored top so it visually
-            continues behind the content area; the gradient below blends it out */}
-        <div className="absolute inset-x-0 top-0 h-[420px] sm:h-[480px] lg:h-[560px]">
-          <img
-            src="/images/mohicans-logo.jpg"
-            alt="Mohicans tactical logo banner"
-            className="w-full h-full object-cover object-top"
-          />
-          {/* fade to page background: transparent at top edge -> 95% opaque at bottom */}
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(to bottom, rgba(9,9,11,0.35) 0%, rgba(9,9,11,0.45) 45%, rgba(9,9,11,0.96) 100%)",
-            }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/70 via-transparent to-transparent" />
-        </div>
+      {/* Mohicans brand banner — compact, fades INTO the content below */}
+      <header className="relative min-h-[240px] sm:min-h-[280px] lg:min-h-[320px] overflow-hidden border-b border-zinc-800 bg-zinc-950">
+        <img
+          src="/images/mohicans-logo.jpg"
+          alt="Mohicans tactical logo banner"
+          className="absolute inset-0 h-full w-full object-cover object-center"
+        />
+        {/* fade the image into page background: strong at bottom (95% opaque), light at top */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(to bottom, rgba(9,9,11,0.55) 0%, rgba(9,9,11,0.25) 40%, rgba(9,9,11,0.95) 100%)",
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/70 via-transparent to-transparent" />
         <div className="relative max-w-7xl mx-auto px-4 pt-8 pb-14 sm:pt-10 sm:pb-16 flex items-end min-h-[240px] sm:min-h-[280px] lg:min-h-[320px]">
           <div className="w-full flex items-end justify-between flex-wrap gap-6">
             <div className="min-w-0">
@@ -318,16 +312,6 @@ export default function App() {
                 Tournament-grade autoexec.cfg — FPS, hit registration, pure competitive performance.
               </p>
             </div>
-            {downloadCount !== null && (
-              <div className="px-3 py-1.5 rounded-lg bg-gradient-to-br from-orange-500/15 to-transparent border border-orange-500/30 text-center flex-shrink-0">
-                <div className="text-xl font-black font-mono text-orange-300 leading-none">
-                  {downloadCount.toLocaleString()}
-                </div>
-                <div className="text-[9px] font-mono text-zinc-500 uppercase tracking-wider mt-0.5">
-                  configs generated
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </header>
@@ -407,63 +391,28 @@ export default function App() {
           </button>
         </div>
 
-        {/* Tools sub-nav — LARGE, prominent tabs between action bar and content */}
-        <div className="mb-4 flex gap-2 flex-wrap relative z-40" style={{ minHeight: "48px" }}>
-          <button
-            onClick={() => setPageTab("config")}
-            className={cn(
-              "px-6 py-3 text-base font-mono uppercase tracking-wider transition-all rounded-lg border-2 font-bold",
-              pageTab === "config"
-                ? "bg-orange-500 text-white shadow-[0_0_25px_rgba(251,146,60,0.5)] border-orange-400"
-                : "bg-zinc-700 border-zinc-500 text-zinc-200 hover:text-white hover:border-zinc-300"
-            )}
-          >
-            ⚙ Config Generator
-          </button>
-          <button
-            onClick={() => setPageTab("binds")}
-            className={cn(
-              "px-6 py-3 text-base font-mono uppercase tracking-wider transition-all rounded-lg border-2 font-bold",
-              pageTab === "binds"
-                ? "bg-orange-500 text-white shadow-[0_0_25px_rgba(251,146,60,0.5)] border-orange-400"
-                : "bg-zinc-700 border-zinc-500 text-zinc-200 hover:text-white hover:border-zinc-300"
-            )}
-          >
-            🔫 Binds & Buy Menu
-          </button>
-          <button
-            onClick={() => setPageTab("rank")}
-            className={cn(
-              "px-6 py-3 text-base font-mono uppercase tracking-wider transition-all rounded-lg border-2 font-bold",
-              pageTab === "rank"
-                ? "bg-orange-500 text-white shadow-[0_0_25px_rgba(251,146,60,0.5)] border-orange-400"
-                : "bg-zinc-700 border-zinc-500 text-zinc-200 hover:text-white hover:border-zinc-300"
-            )}
-          >
-            🏆 Rangliste
-          </button>
-          <button
-            onClick={() => setPageTab("demo")}
-            className={cn(
-              "px-6 py-3 text-base font-mono uppercase tracking-wider transition-all rounded-lg border-2 font-bold",
-              pageTab === "demo"
-                ? "bg-orange-500 text-white shadow-[0_0_25px_rgba(251,146,60,0.5)] border-orange-400"
-                : "bg-zinc-700 border-zinc-500 text-zinc-200 hover:text-white hover:border-zinc-300"
-            )}
-          >
-            📼 Demo Analyzer
-          </button>
-          <button
-            onClick={() => setPageTab("netcode")}
-            className={cn(
-              "px-6 py-3 text-base font-mono uppercase tracking-wider transition-all rounded-lg border-2 font-bold",
-              pageTab === "netcode"
-                ? "bg-orange-500 text-white shadow-[0_0_25px_rgba(251,146,60,0.5)] border-orange-400"
-                : "bg-zinc-700 border-zinc-500 text-zinc-200 hover:text-white hover:border-zinc-300"
-            )}
-          >
-            📡 Netcode
-          </button>
+        {/* Page tabs — clean underline bar (restored NICE design, extended to 5 tools) */}
+        <div className="mb-3 flex gap-1 border-b border-zinc-800 overflow-x-auto">
+          {([
+            { id: "config", label: "Config Generator" },
+            { id: "binds", label: "Binds & Buy Menu" },
+            { id: "rank", label: "Rangliste" },
+            { id: "demo", label: "Demo Analyzer" },
+            { id: "netcode", label: "Netcode" },
+          ] as const).map((t) => (
+            <button
+              key={t.id}
+              onClick={() => setPageTab(t.id as any)}
+              className={cn(
+                "px-4 py-2 text-xs font-mono uppercase tracking-wider transition-colors border-b-2 -mb-px whitespace-nowrap",
+                pageTab === t.id
+                  ? "border-orange-500 text-orange-300"
+                  : "border-transparent text-zinc-500 hover:text-zinc-300"
+              )}
+            >
+              {t.label}
+            </button>
+          ))}
         </div>
 
         {pageTab === "binds" ? (
