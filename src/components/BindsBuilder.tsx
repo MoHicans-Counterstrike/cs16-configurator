@@ -44,13 +44,26 @@ const GEAR = [
   { id: "flash", name: "Flashbang", price: 200, bind: "flash", emoji: "⚡" },
   { id: "hegren", name: "HE Grenade", price: 300, bind: "hegren", emoji: "💥" },
   { id: "smoke", name: "Smoke", price: 300, bind: "sgren", emoji: "🌫️" },
+  { id: "primammo", name: "Primary Ammo", price: 60, bind: "primammo", emoji: "🔸" },
+  { id: "secammo", name: "Pistol Ammo", price: 25, bind: "secammo", emoji: "🔹" },
 ];
 
 const KEY_OPTIONS = [
-  "F1","F2","F3","F4","F5","F6",
+  "F1","F2","F3","F4","F5","F6","F7","F8","F9","F10","F11","F12",
   "KP_END","KP_DOWNARROW","KP_PGDN","KP_LEFTARROW","KP_5","KP_RIGHTARROW",
-  "KP_HOME","KP_UPARROW","KP_PGUP","KP_INS","KP_DEL",
-  "MOUSE4","MOUSE5",
+  "KP_HOME","KP_UPARROW","KP_PGUP","KP_INS","KP_DEL","KP_ENTER",
+  "MOUSE3","MOUSE4","MOUSE5","MWHEELUP","MWHEELDOWN",
+  "CAPSLOCK","SHIFT","CTRL","ALT","B","V","C","X","Z","O","P","H","T","G",
+];
+
+// classic full-loadout combos from the golden era buy scripts
+const PRESET_COMBOS = [
+  { name: "Full ECO", items: "vest;deagle;secammo", desc: "Pistol round upgrade" },
+  { name: "Full BUY CT", items: "vesthelm;flash;flash;hegren;sgren;m4a1;primammo;deagle;secammo;defuser", desc: "M4 full load" },
+  { name: "Full BUY T", items: "vesthelm;flash;flash;hegren;sgren;ak47;primammo;deagle;secammo", desc: "AK full load" },
+  { name: "AWP Load", items: "vesthelm;awp;primammo;deagle;secammo;flash;hegren", desc: "Sniper kit" },
+  { name: "Force Buy", items: "vest;famas;galil;primammo;flash", desc: "Low money rush" },
+  { name: "Nade Set", items: "flash;flash;hegren;sgren", desc: "Utility only" },
 ];
 
 function WeaponSVG({ id }: { id: string }) {
@@ -249,6 +262,31 @@ export default function BindsBuilder() {
             </p>
           ) : (
             <>
+              {/* classic full-loadout combos */}
+              <p className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 mb-1.5">
+                Classic combos (one-click full loadout)
+              </p>
+              <div className="flex gap-1.5 flex-wrap mb-3">
+                {PRESET_COMBOS.map((pc) => (
+                  <button
+                    key={pc.name}
+                    onClick={() =>
+                      setBinds((prev) => ({ ...prev, [editingKey]: pc.items }))
+                    }
+                    title={pc.desc}
+                    className="px-2.5 py-1.5 rounded border border-violet-500/40 hover:border-violet-400 bg-violet-500/5 hover:bg-violet-500/15 text-[10px] font-mono text-violet-300 transition-colors"
+                  >
+                    {pc.name}
+                  </button>
+                ))}
+                <button
+                  onClick={() => setBinds((prev) => ({ ...prev, [editingKey]: "" }))}
+                  className="px-2.5 py-1.5 rounded border border-zinc-700 hover:border-red-500/50 text-[10px] font-mono text-zinc-500 hover:text-red-300 transition-colors"
+                >
+                  clear key
+                </button>
+              </div>
+
               <p className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 mb-2">Weapons</p>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 mb-3 max-h-64 overflow-y-auto pr-1">
                 {teamWeapons.map((w) => {

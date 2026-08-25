@@ -14,6 +14,7 @@ import EdpiMeter from "./components/EdpiMeter";
 import LegendsSidebar from "./components/LegendsSidebar";
 import DemoUploader from "./components/DemoUploader";
 import BindsBuilder from "./components/BindsBuilder";
+import Leaderboard from "./components/Leaderboard";
 import { encodeState, decodeState } from "./utils/urlState";
 import { getLegendById } from "./data/legends";
 
@@ -173,10 +174,10 @@ export default function App() {
   });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const [activeTab, setActiveTab] = useState(categories[0].id);
-  const [pageTab, setPageTab] = useState<"config" | "binds">("config");
+  const [pageTab, setPageTab] = useState<"config" | "binds" | "rank">("config");
   const [copied, setCopied] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
-  const [crtMode, setCrtMode] = useState<"mild" | "full">("mild");
+  const [crtMode, setCrtMode] = useState<"off" | "mild" | "full">("mild");
   const [downloadCount, setDownloadCount] = useState<number | null>(null);
 
   // fetch download counter once
@@ -244,15 +245,17 @@ export default function App() {
       <NetworkTicker />
 
       {/* Scanline overlay for CRT vibe */}
-      <div
-        className="fixed inset-0 pointer-events-none z-50"
-        style={{
-          opacity: crtMode === "full" ? 0.12 : 0.04,
-          transition: "opacity 300ms",
-          backgroundImage:
-            "repeating-linear-gradient(0deg, transparent 0, transparent 2px, rgba(255,255,255,0.3) 2px, rgba(255,255,255,0.3) 3px)",
-        }}
-      />
+      {crtMode !== "off" && (
+        <div
+          className="fixed inset-0 pointer-events-none z-50"
+          style={{
+            opacity: crtMode === "full" ? 0.12 : 0.04,
+            transition: "opacity 300ms",
+            backgroundImage:
+              "repeating-linear-gradient(0deg, transparent 0, transparent 2px, rgba(255,255,255,0.3) 2px, rgba(255,255,255,0.3) 3px)",
+          }}
+        />
+      )}
       {crtMode === "full" && (
         <div
           className="fixed inset-0 pointer-events-none z-50 animate-pulse"
@@ -273,22 +276,28 @@ export default function App() {
         }}
       />
 
-      {/* Mohicans brand banner — compact, fades INTO the content below */}
-      <header className="relative min-h-[240px] sm:min-h-[280px] lg:min-h-[320px] overflow-hidden border-b border-zinc-800 bg-zinc-950">
-        <img
-          src="/images/mohicans-logo.jpg"
-          alt="Mohicans tactical logo banner"
-          className="absolute inset-0 h-full w-full object-cover object-center"
-        />
-        {/* fade the image into page background: strong at bottom (95% opaque), light at top */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(to bottom, rgba(9,9,11,0.55) 0%, rgba(9,9,11,0.25) 40%, rgba(9,9,11,0.95) 100%)",
-          }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/70 via-transparent to-transparent" />
+      {/* Mohicans brand banner — image anchored to TOP edge, fades into content below */}
+      <header className="relative min-h-[240px] sm:min-h-[280px] lg:min-h-[320px] bg-zinc-950">
+        {/* image container is NOT clipped: it overflows below the header and
+            fades into the content area. Top edge stays flush with the header top. */}
+        {/* image is taller than header and anchored top so it visually
+            continues behind the content area; the gradient below blends it out */}
+        <div className="absolute inset-x-0 top-0 h-[420px] sm:h-[480px] lg:h-[560px]">
+          <img
+            src="/images/mohicans-logo.jpg"
+            alt="Mohicans tactical logo banner"
+            className="w-full h-full object-cover object-top"
+          />
+          {/* fade to page background: transparent at top edge -> 95% opaque at bottom */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(to bottom, rgba(9,9,11,0.35) 0%, rgba(9,9,11,0.45) 45%, rgba(9,9,11,0.96) 100%)",
+            }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/70 via-transparent to-transparent" />
+        </div>
         <div className="relative max-w-7xl mx-auto px-4 pt-8 pb-14 sm:pt-10 sm:pb-16 flex items-end min-h-[240px] sm:min-h-[280px] lg:min-h-[320px]">
           <div className="w-full flex items-end justify-between flex-wrap gap-6">
             <div className="min-w-0">
@@ -346,10 +355,23 @@ export default function App() {
           >
             Binds &amp; Buy Menu
           </button>
+          <button
+            onClick={() => setPageTab("rank")}
+            className={cn(
+              "px-4 py-2 text-xs font-mono uppercase tracking-wider transition-colors border-b-2 -mb-px",
+              pageTab === "rank"
+                ? "border-orange-500 text-orange-300"
+                : "border-transparent text-zinc-500 hover:text-zinc-300"
+            )}
+          >
+            Server Rangliste
+          </button>
         </div>
 
         {pageTab === "binds" ? (
           <BindsBuilder />
+        ) : pageTab === "rank" ? (
+          <Leaderboard />
         ) : (
         <>
         {/* Presets — single compact line */}
@@ -401,7 +423,9 @@ export default function App() {
           </button>
           <div className="flex-1" />
           <button
-            onClick={() => setCrtMode((m) => (m === "mild" ? "full" : "mild"))}
+            onClick={() =>
+              setCrtMode((m) => (m === "off" ? "mild" : m === "mild" ? "full" : "off"))
+            }
             title="Toggle CRT effect intensity"
             className={cn(
               "px-3 py-2 rounded border text-xs font-mono transition-colors",
