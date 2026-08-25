@@ -13,9 +13,24 @@ function hashName(name: string): number {
 const CLAN_COLORS: Record<string, [string, string]> = {
   "SK Gaming": ["#f59e0b", "#78350f"],
   "fnatic": ["#f97316", "#431407"],
+  "fnatic / NiP": ["#f97316", "#431407"],
+  "fnatic / SK": ["#f97316", "#431407"],
   "NiP": ["#eab308", "#422006"],
-  "Virtus.pro": ["#ef4444", "#450a0a"],
   "Natus Vincere": ["#facc15", "#422006"],
+  "Natus Vincere / HellRaisers": ["#facc15", "#422006"],
+  "Team 3D": ["#ef4444", "#450a0a"],
+  "compLexity": ["#ef4444", "#450a0a"],
+  "Team 3D / NoA": ["#ef4444", "#450a0a"],
+  "Team 3D / compLexity": ["#ef4444", "#450a0a"],
+  "mTw": ["#3b82f6", "#1e3a8a"],
+  "NoA": ["#8b5cf6", "#2e1065"],
+  "WeMade FOX / mTw": ["#3b82f6", "#1e3a8a"],
+  "mTw / NoA": ["#3b82f6", "#1e3a8a"],
+  "SK Gaming / NiP": ["#f59e0b", "#78350f"],
+  "SK Gaming / GoL": ["#f59e0b", "#78350f"],
+  "GoL": ["#f59e0b", "#78350f"],
+  "International": ["#6b7280", "#1f2937"],
+  "Pre-1.6": ["#6b7280", "#1f2937"],
 };
 
 export default function ProAvatar({

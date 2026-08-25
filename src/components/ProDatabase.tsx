@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { cn } from "../utils/cn";
 import { legends } from "../data/legends";
+import ProAvatar from "./ProAvatar";
 
-// Pro Database — sorted by clan like the start page
+// Pro Database — sorted by clan with avatars
 const CLANS = [
   { name: "SK Gaming", ids: ["heaton", "spawn", "walle", "fisker", "ahl"] },
   { name: "fnatic / NiP", ids: ["f0rest", "getright", "gux", "dsn", "carn", "friberg", "xizt"] },
@@ -58,7 +59,7 @@ export default function ProDatabase() {
                         : "border-zinc-800 text-zinc-300 hover:border-zinc-600"
                     )}
                   >
-                    <span className="text-lg">{p.icon}</span>
+                    <ProAvatar name={p.name} clan={p.team} size={28} />
                     <div className="flex-1 min-w-0">
                       <div className="text-xs font-mono font-bold truncate">{p.name}</div>
                       <div className="text-[10px] text-zinc-400 truncate">{p.team}</div>
@@ -75,9 +76,7 @@ export default function ProDatabase() {
         {player ? (
           <>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-14 h-14 rounded-lg bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-center text-zinc-950 font-black text-xl shadow-[0_0_25px_rgba(251,146,60,0.3)]">
-                {player.icon}
-              </div>
+              <ProAvatar name={player.name} clan={player.team} size={56} />
               <div className="flex-1 min-w-0">
                 <h3 className="text-base font-bold text-amber-100">{player.name}</h3>
                 <p className="text-xs text-zinc-400">{player.realName}</p>
