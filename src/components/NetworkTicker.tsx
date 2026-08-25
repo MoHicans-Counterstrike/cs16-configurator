@@ -122,7 +122,7 @@ export default function NetworkTicker() {
             <Dot ok={true} />
             <span className="text-violet-400 uppercase text-xs tracking-widest">IRC</span>
             <a
-              href="https://webchat.quakenet.org/?channels=mohicans&uio=d4"
+              href="https://webchat.quakenet.org/?nick=mohican-fan.&channels=mohicans&uio=MTY9dHJ1ZSYyPXRydWUmND10cnVlJjk9dHJ1ZSYxMT0zNjkmMTI9dHJ1ZQ75"
               target="_blank"
               rel="noreferrer"
               className="text-amber-100 hover:text-violet-300 transition-colors underline decoration-dotted decoration-violet-400/40 underline-offset-4"
