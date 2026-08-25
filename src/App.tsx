@@ -13,6 +13,7 @@ import CrosshairPreview from "./components/CrosshairPreview";
 import EdpiMeter from "./components/EdpiMeter";
 import LegendsSidebar from "./components/LegendsSidebar";
 import DemoUploader from "./components/DemoUploader";
+import ConfigUploader from "./components/ConfigUploader";
 import BindsBuilder from "./components/BindsBuilder";
 import Leaderboard from "./components/Leaderboard";
 import NetcodeCalc from "./components/NetcodeCalc";
@@ -348,28 +349,29 @@ export default function App() {
               </button>
             ))}
           </div>
-          <div className="flex-1" />
-          {downloadCount !== null && (
-            <span className="text-[10px] text-orange-400/80 font-mono">
-              ⬇ {downloadCount.toLocaleString()} configs generated
-            </span>
-          )}
-          <button
-            onClick={() =>
-              setCrtMode((m) => (m === "off" ? "mild" : m === "mild" ? "full" : "off"))
-            }
-            title="CRT scanline effect (off / mild / full)"
-            className={cn(
-              "px-2.5 py-1 rounded text-xs font-mono border transition-colors",
-              crtMode === "off"
-                ? "border-zinc-700 text-zinc-500"
-                : crtMode === "full"
-                ? "border-orange-500 text-orange-300 bg-orange-500/10"
-                : "border-zinc-600 text-zinc-400"
+          <div className="ml-auto flex items-center gap-2">
+            {downloadCount !== null && (
+              <span className="text-[10px] text-orange-400/80 font-mono">
+                ⬇ {downloadCount.toLocaleString()} configs generated
+              </span>
             )}
-          >
-            📺 CRT: {crtMode.toUpperCase()}
-          </button>
+            <button
+              onClick={() =>
+                setCrtMode((m) => (m === "off" ? "mild" : m === "mild" ? "full" : "off"))
+              }
+              title="CRT scanline effect (off / mild / full)"
+              className={cn(
+                "px-2.5 py-1 rounded text-xs font-mono border transition-colors",
+                crtMode === "off"
+                  ? "border-zinc-700 text-zinc-500"
+                  : crtMode === "full"
+                  ? "border-orange-500 text-orange-300 bg-orange-500/10"
+                  : "border-zinc-600 text-zinc-400"
+              )}
+            >
+              📺 CRT: {crtMode.toUpperCase()}
+            </button>
+          </div>
         </div>
 
         {/* Action bar — prominent, always visible above the settings grid */}
@@ -405,28 +407,63 @@ export default function App() {
           </button>
         </div>
 
-        {/* Tools sub-nav — prominent, between action bar and content */}
-        <div className="mb-3 flex gap-1.5 flex-wrap">
-          {([
-            { id: "config", label: "⚙ Config Generator" },
-            { id: "binds", label: "🔫 Binds & Buy Menu" },
-            { id: "rank", label: "🏆 Rangliste" },
-            { id: "demo", label: "📼 Demo Analyzer" },
-            { id: "netcode", label: "📡 Netcode" },
-          ] as const).map((t) => (
-            <button
-              key={t.id}
-              onClick={() => setPageTab(t.id as any)}
-              className={cn(
-                "px-4 py-2 text-xs font-mono uppercase tracking-wider transition-all rounded-md border",
-                pageTab === t.id
-                  ? "bg-orange-500/15 border-orange-500/60 text-orange-200 shadow-[0_0_15px_rgba(251,146,60,0.15)]"
-                  : "bg-zinc-900/60 border-zinc-700/60 text-zinc-400 hover:text-zinc-200 hover:border-zinc-500"
-              )}
-            >
-              {t.label}
-            </button>
-          ))}
+        {/* Tools sub-nav — LARGE, prominent tabs between action bar and content */}
+        <div className="mb-4 flex gap-2 flex-wrap">
+          <button
+            onClick={() => setPageTab("config")}
+            className={cn(
+              "px-5 py-2.5 text-sm font-mono uppercase tracking-wider transition-all rounded-lg border-2",
+              pageTab === "config"
+                ? "bg-orange-500/20 border-orange-500 text-orange-100 shadow-[0_0_20px_rgba(251,146,60,0.2)]"
+                : "bg-zinc-900/60 border-zinc-700 text-zinc-400 hover:text-zinc-200 hover:border-zinc-500"
+            )}
+          >
+            ⚙ Config Generator
+          </button>
+          <button
+            onClick={() => setPageTab("binds")}
+            className={cn(
+              "px-5 py-2.5 text-sm font-mono uppercase tracking-wider transition-all rounded-lg border-2",
+              pageTab === "binds"
+                ? "bg-orange-500/20 border-orange-500 text-orange-100 shadow-[0_0_20px_rgba(251,146,60,0.2)]"
+                : "bg-zinc-900/60 border-zinc-700 text-zinc-400 hover:text-zinc-200 hover:border-zinc-500"
+            )}
+          >
+            🔫 Binds & Buy Menu
+          </button>
+          <button
+            onClick={() => setPageTab("rank")}
+            className={cn(
+              "px-5 py-2.5 text-sm font-mono uppercase tracking-wider transition-all rounded-lg border-2",
+              pageTab === "rank"
+                ? "bg-orange-500/20 border-orange-500 text-orange-100 shadow-[0_0_20px_rgba(251,146,60,0.2)]"
+                : "bg-zinc-900/60 border-zinc-700 text-zinc-400 hover:text-zinc-200 hover:border-zinc-500"
+            )}
+          >
+            🏆 Rangliste
+          </button>
+          <button
+            onClick={() => setPageTab("demo")}
+            className={cn(
+              "px-5 py-2.5 text-sm font-mono uppercase tracking-wider transition-all rounded-lg border-2",
+              pageTab === "demo"
+                ? "bg-orange-500/20 border-orange-500 text-orange-100 shadow-[0_0_20px_rgba(251,146,60,0.2)]"
+                : "bg-zinc-900/60 border-zinc-700 text-zinc-400 hover:text-zinc-200 hover:border-zinc-500"
+            )}
+          >
+            📼 Demo Analyzer
+          </button>
+          <button
+            onClick={() => setPageTab("netcode")}
+            className={cn(
+              "px-5 py-2.5 text-sm font-mono uppercase tracking-wider transition-all rounded-lg border-2",
+              pageTab === "netcode"
+                ? "bg-orange-500/20 border-orange-500 text-orange-100 shadow-[0_0_20px_rgba(251,146,60,0.2)]"
+                : "bg-zinc-900/60 border-zinc-700 text-zinc-400 hover:text-zinc-200 hover:border-zinc-500"
+            )}
+          >
+            📡 Netcode
+          </button>
         </div>
 
         {pageTab === "binds" ? (
@@ -556,6 +593,13 @@ export default function App() {
                 <DemoUploader />
               </div>
             </div>
+
+            {/* Upload your own config */}
+            <ConfigUploader
+              onApply={(values) => {
+                setValues((prev) => ({ ...prev, ...values }));
+              }}
+            />
 
             <div className="bg-zinc-900/50 border border-zinc-800 rounded-lg overflow-hidden backdrop-blur">
               <div className="px-4 py-3 border-b border-zinc-800 bg-zinc-900/80 flex items-center justify-between">
