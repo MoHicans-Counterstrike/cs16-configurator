@@ -11,7 +11,7 @@ import { cn } from "./utils/cn";
 import NetworkTicker from "./components/NetworkTicker";
 import CrosshairPreview from "./components/CrosshairPreview";
 import EdpiMeter from "./components/EdpiMeter";
-import LegendsRow from "./components/LegendsRow";
+import LegendsSidebar from "./components/LegendsSidebar";
 import { encodeState, decodeState } from "./utils/urlState";
 import { getLegendById } from "./data/legends";
 
@@ -295,45 +295,18 @@ export default function App() {
                 and pure competitive performance. Based on settings used by CS legends.
               </p>
             </div>
-            <div className="flex gap-2 flex-wrap items-center">
-              <button
-                onClick={() => setCrtMode((m) => (m === "mild" ? "full" : "mild"))}
-                title="Toggle CRT effect intensity"
-                className={cn(
-                  "px-3 py-2 rounded border text-sm font-mono transition-colors bg-zinc-900/50",
-                  crtMode === "full"
-                    ? "border-orange-500/70 text-orange-300"
-                    : "border-zinc-700 text-zinc-400 hover:text-amber-100"
-                )}
-              >
-                {crtMode === "full" ? "📺 CRT: FULL" : "📺 CRT: MILD"}
-              </button>
-              <button
-                onClick={handleShare}
-                className="px-4 py-2 rounded border border-sky-500/50 hover:bg-sky-500/10 text-sky-300 hover:text-sky-200 text-sm font-mono transition-colors bg-zinc-900/50"
-                title="Copy a link that restores this exact config"
-              >
-                {shareCopied ? "✓ LINK COPIED" : "🔗 SHARE CONFIG"}
-              </button>
-              <button
-                onClick={handleReset}
-                className="px-4 py-2 rounded border border-zinc-700 hover:border-orange-500/50 text-zinc-300 hover:text-amber-100 text-sm font-mono transition-colors bg-zinc-900/50"
-              >
-                RESET
-              </button>
-              <button
-                onClick={handleCopy}
-                className="px-4 py-2 rounded border border-orange-500/50 hover:bg-orange-500/10 text-orange-300 hover:text-orange-200 text-sm font-mono transition-colors bg-zinc-950/70"
-              >
-                {copied ? "✓ COPIED" : "COPY CONFIG"}
-              </button>
-              <button
-                onClick={handleDownload}
-                className="px-4 py-2 rounded bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-400 hover:to-amber-400 text-zinc-950 font-bold text-sm transition-all shadow-[0_0_20px_rgba(251,146,60,0.3)] hover:shadow-[0_0_30px_rgba(251,146,60,0.5)]"
-              >
-                ↓ DOWNLOAD autoexec.cfg
-              </button>
-            </div>
+            {downloadCount !== null && (
+              <div className="flex flex-col items-start sm:items-end gap-1">
+                <div className="px-4 py-2 rounded-lg bg-gradient-to-br from-orange-500/15 to-transparent border border-orange-500/30 text-center">
+                  <div className="text-2xl font-black font-mono text-orange-300 leading-none">
+                    {downloadCount.toLocaleString()}
+                  </div>
+                  <div className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider mt-1">
+                    configs generated
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </header>
@@ -369,7 +342,50 @@ export default function App() {
           </p>
         </div>
 
-        <LegendsRow onLoad={handleLegend} />
+        {/* Action bar — prominent, always visible above the settings grid */}
+        <div className="mb-4 flex gap-2 flex-wrap items-center bg-zinc-900/60 border border-zinc-700 rounded-lg px-3 py-2.5 sticky top-0 z-30 backdrop-blur">
+          <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mr-1 hidden sm:inline">
+            Actions
+          </span>
+          <button
+            onClick={handleDownload}
+            className="px-5 py-2 rounded bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-400 hover:to-amber-400 text-zinc-950 font-bold text-sm transition-all shadow-[0_0_20px_rgba(251,146,60,0.35)] hover:shadow-[0_0_30px_rgba(251,146,60,0.55)]"
+          >
+            ↓ DOWNLOAD autoexec.cfg
+          </button>
+          <button
+            onClick={handleCopy}
+            className="px-4 py-2 rounded border border-orange-500/50 hover:bg-orange-500/10 text-orange-300 hover:text-orange-200 text-sm font-mono transition-colors"
+          >
+            {copied ? "✓ COPIED" : "COPY CONFIG"}
+          </button>
+          <button
+            onClick={handleShare}
+            className="px-4 py-2 rounded border border-sky-500/50 hover:bg-sky-500/10 text-sky-300 hover:text-sky-200 text-sm font-mono transition-colors"
+            title="Copy a link that restores this exact config"
+          >
+            {shareCopied ? "✓ LINK COPIED" : "🔗 SHARE"}
+          </button>
+          <div className="flex-1" />
+          <button
+            onClick={() => setCrtMode((m) => (m === "mild" ? "full" : "mild"))}
+            title="Toggle CRT effect intensity"
+            className={cn(
+              "px-3 py-2 rounded border text-xs font-mono transition-colors",
+              crtMode === "full"
+                ? "border-orange-500/70 text-orange-300 bg-orange-500/10"
+                : "border-zinc-700 text-zinc-400 hover:text-amber-100"
+            )}
+          >
+            📺 CRT: {crtMode.toUpperCase()}
+          </button>
+          <button
+            onClick={handleReset}
+            className="px-3 py-2 rounded border border-zinc-700 hover:border-red-500/50 text-zinc-400 hover:text-red-300 text-xs font-mono transition-colors"
+          >
+            RESET
+          </button>
+        </div>
 
         <div className="grid lg:grid-cols-[260px_1fr_380px] gap-4">
           {/* Left nav */}
@@ -399,6 +415,8 @@ export default function App() {
                 ))}
               </div>
             </div>
+
+            <LegendsSidebar onLoad={handleLegend} />
 
             <div className="mt-4 bg-gradient-to-br from-orange-500/10 to-transparent border border-orange-500/20 rounded-lg p-4">
               <div className="text-xs font-mono text-orange-400 uppercase mb-2">Quick Install</div>
