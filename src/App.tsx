@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   categories,
   generateConfig,
@@ -9,6 +9,11 @@ import {
 } from "./data/settings";
 import { cn } from "./utils/cn";
 import NetworkTicker from "./components/NetworkTicker";
+import CrosshairPreview from "./components/CrosshairPreview";
+import EdpiMeter from "./components/EdpiMeter";
+import LegendsRow from "./components/LegendsRow";
+import { encodeState, decodeState } from "./utils/urlState";
+import { getLegendById } from "./data/legends";
 
 function SettingControl({
   setting,
@@ -153,9 +158,30 @@ function CategoryPanel({
 }
 
 export default function App() {
-  const [values, setValues] = useState<Record<string, any>>(() => getInitialValues());
+  const [values, setValues] = useState<Record<string, any>>(() => {
+    const initial = getInitialValues();
+    // restore shared config from ?p=
+    const params = new URLSearchParams(window.location.search);
+    const shared = params.get("p");
+    if (shared) {
+      const decoded = decodeState(shared);
+      if (decoded) return { ...initial, ...decoded };
+    }
+    return initial;
+  });
   const [activeTab, setActiveTab] = useState(categories[0].id);
   const [copied, setCopied] = useState(false);
+  const [shareCopied, setShareCopied] = useState(false);
+  const [crtMode, setCrtMode] = useState<"mild" | "full">("mild");
+  const [downloadCount, setDownloadCount] = useState<number | null>(null);
+
+  // fetch download counter once
+  useEffect(() => {
+    fetch("/api/count", { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => d && setDownloadCount(d.count))
+      .catch(() => {});
+  }, []);
 
   const config = useMemo(() => generateConfig(values), [values]);
 
@@ -173,6 +199,23 @@ export default function App() {
     a.download = "autoexec.cfg";
     a.click();
     URL.revokeObjectURL(url);
+    // fire-and-forget counter bump (best effort)
+    fetch("/api/count", { method: "POST" }).catch(() => {});
+    setDownloadCount((c) => (c === null ? null : c + 1));
+  };
+
+  const handleShare = async () => {
+    try {
+      const url = `${window.location.origin}${window.location.pathname}?p=${encodeState(values)}`;
+      await navigator.clipboard.writeText(url);
+      setShareCopied(true);
+      setTimeout(() => setShareCopied(false), 2000);
+    } catch {}
+  };
+
+  const handleLegend = (id: string) => {
+    const legend = getLegendById(id);
+    if (legend) setValues((prev) => ({ ...prev, ...legend.overrides }));
   };
 
   const handleCopy = async () => {
@@ -196,12 +239,23 @@ export default function App() {
     <div className="min-h-screen bg-zinc-950 text-amber-50 font-sans relative overflow-x-hidden">
       {/* Scanline overlay for CRT vibe */}
       <div
-        className="fixed inset-0 pointer-events-none z-50 opacity-[0.04]"
+        className="fixed inset-0 pointer-events-none z-50"
         style={{
+          opacity: crtMode === "full" ? 0.12 : 0.04,
+          transition: "opacity 300ms",
           backgroundImage:
             "repeating-linear-gradient(0deg, transparent 0, transparent 2px, rgba(255,255,255,0.3) 2px, rgba(255,255,255,0.3) 3px)",
         }}
       />
+      {crtMode === "full" && (
+        <div
+          className="fixed inset-0 pointer-events-none z-50 animate-pulse"
+          style={{
+            background:
+              "radial-gradient(ellipse at center, transparent 60%, rgba(251,146,60,0.05) 100%)",
+          }}
+        />
+      )}
 
       {/* Background grid */}
       <div
@@ -241,10 +295,29 @@ export default function App() {
                 and pure competitive performance. Based on settings used by CS legends.
               </p>
             </div>
-            <div className="flex gap-2 flex-wrap">
+            <div className="flex gap-2 flex-wrap items-center">
+              <button
+                onClick={() => setCrtMode((m) => (m === "mild" ? "full" : "mild"))}
+                title="Toggle CRT effect intensity"
+                className={cn(
+                  "px-3 py-2 rounded border text-sm font-mono transition-colors bg-zinc-900/50",
+                  crtMode === "full"
+                    ? "border-orange-500/70 text-orange-300"
+                    : "border-zinc-700 text-zinc-400 hover:text-amber-100"
+                )}
+              >
+                {crtMode === "full" ? "📺 CRT: FULL" : "📺 CRT: MILD"}
+              </button>
+              <button
+                onClick={handleShare}
+                className="px-4 py-2 rounded border border-sky-500/50 hover:bg-sky-500/10 text-sky-300 hover:text-sky-200 text-sm font-mono transition-colors bg-zinc-900/50"
+                title="Copy a link that restores this exact config"
+              >
+                {shareCopied ? "✓ LINK COPIED" : "🔗 SHARE CONFIG"}
+              </button>
               <button
                 onClick={handleReset}
-                className="px-4 py-2 rounded border border-zinc-700 hover:border-orange-500/50 text-zinc-300 hover:text-amber-100 text-sm font-mono transition-colors bg-zinc-950/70"
+                className="px-4 py-2 rounded border border-zinc-700 hover:border-orange-500/50 text-zinc-300 hover:text-amber-100 text-sm font-mono transition-colors bg-zinc-900/50"
               >
                 RESET
               </button>
@@ -288,8 +361,15 @@ export default function App() {
           </div>
           <p className="text-xs text-zinc-500 italic">
             Click a preset to load a pro-verified configuration. You can customize further after.
+            {downloadCount !== null && (
+              <span className="ml-2 text-orange-400/80 font-mono not-italic">
+                ⬇ {downloadCount.toLocaleString()} configs generated
+              </span>
+            )}
           </p>
         </div>
+
+        <LegendsRow onLoad={handleLegend} />
 
         <div className="grid lg:grid-cols-[260px_1fr_380px] gap-4">
           {/* Left nav */}
@@ -343,7 +423,24 @@ export default function App() {
           </main>
 
           {/* Right: live config preview */}
-          <aside className="lg:sticky lg:top-4 lg:self-start h-fit">
+          <aside className="lg:sticky lg:top-4 lg:self-start h-fit space-y-4">
+            {/* Crosshair live preview */}
+            <div className="bg-zinc-900/50 border border-zinc-800 rounded-lg overflow-hidden backdrop-blur">
+              <div className="px-4 py-3 border-b border-zinc-800 bg-zinc-900/80">
+                <p className="text-xs font-mono text-zinc-500 uppercase tracking-wider">Crosshair Preview</p>
+                <p className="text-xs text-zinc-400 mt-0.5">live — changes with HUD settings</p>
+              </div>
+              <div className="p-3">
+                <CrosshairPreview
+                  size={String(values["cl_crosshair_size"] ?? "small")}
+                  color={String(values["cl_crosshair_color"] ?? "50 250 50")}
+                  translucent={Number(values["cl_crosshair_translucent"] ?? 0)}
+                  dynamic={Boolean(values["cl_dynamiccrosshair"])}
+                />
+                <EdpiMeter sensitivity={Number(values["sensitivity"] ?? 2.1)} />
+              </div>
+            </div>
+
             <div className="bg-zinc-900/50 border border-zinc-800 rounded-lg overflow-hidden backdrop-blur">
               <div className="px-4 py-3 border-b border-zinc-800 bg-zinc-900/80 flex items-center justify-between">
                 <div>
