@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { cn } from "../utils/cn";
 
 // Authentic CS 1.6 crosshair settings — matches actual game commands
@@ -18,7 +18,6 @@ const CROSSHAIR_PRESETS = [
   { id: "translucent_green", name: "Translucent", color: "50 250 50", size: "small", translucent: 1, dynamic: 0 },
 ];
 
-// Map scenes for POV preview
 const MAP_SCENES = [
   { id: "italy", name: "italy", src: "/maps/italy.jpg" },
   { id: "office", name: "office", src: "/maps/office.jpg" },
@@ -30,10 +29,9 @@ export default function CrosshairGallery() {
   const [selected, setSelected] = useState<string | null>("classic_green");
   const [scene, setScene] = useState<string>("italy");
   const [spread, setSpread] = useState(0);
-  const crosshair = CROSSHAIRS.find((c) => c.id === selected);
+  const crosshair = CROSSHAIR_PRESETS.find((c) => c.id === selected);
 
-  // Dynamic crosshair animation
-  useState(() => {
+  useEffect(() => {
     if (!crosshair?.dynamic) {
       setSpread(0);
       return;
@@ -52,7 +50,7 @@ export default function CrosshairGallery() {
       });
     }, 90);
     return () => clearInterval(interval);
-  });
+  }, [crosshair?.dynamic]);
 
   const rgb = (color: string) => {
     const parts = color.split(/\s+/).map(Number);
@@ -83,7 +81,6 @@ export default function CrosshairGallery() {
               <img key={s.id} src={s.src} alt={`CS 1.6 ${s.name}`} className="absolute inset-0 w-full h-full object-cover" draggable={false} style={{ display: scene === s.id ? "block" : "none" }} />
             ))}
             <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.25) 100%)" }} />
-            {/* Crosshair */}
             <svg className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 overflow-visible" width="120" height="120" viewBox="-60 -60 120 120">
               <g stroke={rgb(crosshair?.color ?? "50 250 50")} strokeWidth={thickness} opacity={opacity}>
                 <line x1={0} y1={-gap} x2={0} y2={-gap - len} />
@@ -105,22 +102,17 @@ export default function CrosshairGallery() {
         <div className="bg-zinc-900/40 border border-zinc-800 rounded-lg p-4">
           <p className="text-xs font-mono text-zinc-300 mb-2">Console Commands</p>
           <div className="space-y-1">
-            <div className="flex items-center justify-between px-3 py-1.5 rounded bg-zinc-950 border border-zinc-800">
-              <code className="text-[11px] font-mono text-orange-300">cl_crosshair_color "{crosshair.color}"</code>
-              <button onClick={() => navigator.clipboard.writeText(`cl_crosshair_color "${crosshair.color}"`)} className="text-[10px] font-mono text-zinc-500 hover:text-orange-300">copy</button>
-            </div>
-            <div className="flex items-center justify-between px-3 py-1.5 rounded bg-zinc-950 border border-zinc-800">
-              <code className="text-[11px] font-mono text-orange-300">cl_crosshair_size {crosshair.size}</code>
-              <button onClick={() => navigator.clipboard.writeText(`cl_crosshair_size ${crosshair.size}`)} className="text-[10px] font-mono text-zinc-500 hover:text-orange-300">copy</button>
-            </div>
-            <div className="flex items-center justify-between px-3 py-1.5 rounded bg-zinc-950 border border-zinc-800">
-              <code className="text-[11px] font-mono text-orange-300">cl_crosshair_translucent {crosshair.translucent}</code>
-              <button onClick={() => navigator.clipboard.writeText(`cl_crosshair_translucent ${crosshair.translucent}`)} className="text-[10px] font-mono text-zinc-500 hover:text-orange-300">copy</button>
-            </div>
-            <div className="flex items-center justify-between px-3 py-1.5 rounded bg-zinc-950 border border-zinc-800">
-              <code className="text-[11px] font-mono text-orange-300">cl_dynamiccrosshair {crosshair.dynamic}</code>
-              <button onClick={() => navigator.clipboard.writeText(`cl_dynamiccrosshair ${crosshair.dynamic}`)} className="text-[10px] font-mono text-zinc-500 hover:text-orange-300">copy</button>
-            </div>
+            {[
+              { cmd: `cl_crosshair_color "${crosshair.color}"`, label: "color" },
+              { cmd: `cl_crosshair_size ${crosshair.size}`, label: "size" },
+              { cmd: `cl_crosshair_translucent ${crosshair.translucent}`, label: "translucent" },
+              { cmd: `cl_dynamiccrosshair ${crosshair.dynamic}`, label: "dynamic" },
+            ].map(({ cmd, label }) => (
+              <div key={label} className="flex items-center justify-between px-3 py-1.5 rounded bg-zinc-950 border border-zinc-800">
+                <code className="text-[11px] font-mono text-orange-300">{cmd}</code>
+                <button onClick={() => navigator.clipboard.writeText(cmd)} className="text-[10px] font-mono text-zinc-500 hover:text-orange-300">copy</button>
+              </div>
+            ))}
           </div>
         </div>
       )}

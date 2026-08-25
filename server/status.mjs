@@ -100,11 +100,12 @@ function tsQuery() {
         const chanMap = {};
         for (const line of step.channels || []) {
           const ch = Object.fromEntries(line.split(" ").map((kv) => kv.split("=")));
-          chanMap[ch.cid] = decode(ch.channel_name || "");
+          chanMap[ch.cid] = { name: decode(ch.channel_name || ""), order: Number(ch.channel_order || 0) };
         }
         finish({
           online: true,
-          clients: clients.map((c) => ({ ...c, channel: chanMap[c.cid] || "" })),
+          clients: clients.map((c) => ({ ...c, channel: chanMap[c.cid]?.name || "" })),
+          channelsList: Object.values(chanMap).sort((a, b) => a.order - b.order).map((c) => ({ name: c.name, clients: clients.filter((cl) => cl.channel === c.name).length })),
         });
       }
     });
