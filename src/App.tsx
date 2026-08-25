@@ -415,7 +415,7 @@ export default function App() {
               "px-5 py-2.5 text-sm font-mono uppercase tracking-wider transition-all rounded-lg border-2",
               pageTab === "config"
                 ? "bg-orange-500/20 border-orange-500 text-orange-100 shadow-[0_0_20px_rgba(251,146,60,0.2)]"
-                : "bg-zinc-800 border-zinc-600 text-zinc-300 hover:text-white hover:border-zinc-400"
+                : "bg-zinc-700 border-zinc-500 text-zinc-200 hover:text-white hover:border-zinc-300"
             )}
           >
             ⚙ Config Generator
@@ -426,7 +426,7 @@ export default function App() {
               "px-5 py-2.5 text-sm font-mono uppercase tracking-wider transition-all rounded-lg border-2",
               pageTab === "binds"
                 ? "bg-orange-500/20 border-orange-500 text-orange-100 shadow-[0_0_20px_rgba(251,146,60,0.2)]"
-                : "bg-zinc-800 border-zinc-600 text-zinc-300 hover:text-white hover:border-zinc-400"
+                : "bg-zinc-700 border-zinc-500 text-zinc-200 hover:text-white hover:border-zinc-300"
             )}
           >
             🔫 Binds & Buy Menu
@@ -437,7 +437,7 @@ export default function App() {
               "px-5 py-2.5 text-sm font-mono uppercase tracking-wider transition-all rounded-lg border-2",
               pageTab === "rank"
                 ? "bg-orange-500/20 border-orange-500 text-orange-100 shadow-[0_0_20px_rgba(251,146,60,0.2)]"
-                : "bg-zinc-800 border-zinc-600 text-zinc-300 hover:text-white hover:border-zinc-400"
+                : "bg-zinc-700 border-zinc-500 text-zinc-200 hover:text-white hover:border-zinc-300"
             )}
           >
             🏆 Rangliste
@@ -448,7 +448,7 @@ export default function App() {
               "px-5 py-2.5 text-sm font-mono uppercase tracking-wider transition-all rounded-lg border-2",
               pageTab === "demo"
                 ? "bg-orange-500/20 border-orange-500 text-orange-100 shadow-[0_0_20px_rgba(251,146,60,0.2)]"
-                : "bg-zinc-800 border-zinc-600 text-zinc-300 hover:text-white hover:border-zinc-400"
+                : "bg-zinc-700 border-zinc-500 text-zinc-200 hover:text-white hover:border-zinc-300"
             )}
           >
             📼 Demo Analyzer
@@ -459,7 +459,7 @@ export default function App() {
               "px-5 py-2.5 text-sm font-mono uppercase tracking-wider transition-all rounded-lg border-2",
               pageTab === "netcode"
                 ? "bg-orange-500/20 border-orange-500 text-orange-100 shadow-[0_0_20px_rgba(251,146,60,0.2)]"
-                : "bg-zinc-800 border-zinc-600 text-zinc-300 hover:text-white hover:border-zinc-400"
+                : "bg-zinc-700 border-zinc-500 text-zinc-200 hover:text-white hover:border-zinc-300"
             )}
           >
             📡 Netcode
