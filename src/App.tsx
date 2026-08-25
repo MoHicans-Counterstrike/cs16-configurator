@@ -13,6 +13,7 @@ import CrosshairPreview from "./components/CrosshairPreview";
 import EdpiMeter from "./components/EdpiMeter";
 import LegendsSidebar from "./components/LegendsSidebar";
 import DemoUploader from "./components/DemoUploader";
+import BindsBuilder from "./components/BindsBuilder";
 import { encodeState, decodeState } from "./utils/urlState";
 import { getLegendById } from "./data/legends";
 
@@ -272,16 +273,23 @@ export default function App() {
         }}
       />
 
-      {/* Mohicans brand banner */}
-      <header className="relative min-h-[420px] sm:min-h-[500px] lg:min-h-[560px] overflow-hidden border-b border-zinc-800 bg-zinc-950">
+      {/* Mohicans brand banner — compact, fades INTO the content below */}
+      <header className="relative min-h-[240px] sm:min-h-[280px] lg:min-h-[320px] overflow-hidden border-b border-zinc-800 bg-zinc-950">
         <img
           src="/images/mohicans-logo.jpg"
           alt="Mohicans tactical logo banner"
-          className="absolute inset-0 h-full w-full object-cover object-center opacity-100"
+          className="absolute inset-0 h-full w-full object-cover object-center"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/90 via-zinc-950/35 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-zinc-950/20" />
-        <div className="relative max-w-7xl mx-auto px-4 py-8 sm:py-10 min-h-[420px] sm:min-h-[500px] lg:min-h-[560px] flex items-end">
+        {/* fade the image into page background: strong at bottom (95% opaque), light at top */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(to bottom, rgba(9,9,11,0.55) 0%, rgba(9,9,11,0.25) 40%, rgba(9,9,11,0.95) 100%)",
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/70 via-transparent to-transparent" />
+        <div className="relative max-w-7xl mx-auto px-4 pt-8 pb-14 sm:pt-10 sm:pb-16 flex items-end min-h-[240px] sm:min-h-[280px] lg:min-h-[320px]">
           <div className="w-full flex items-end justify-between flex-wrap gap-6">
             <div className="min-w-0">
               <div className="flex items-center gap-3 mb-2">

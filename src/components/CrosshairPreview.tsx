@@ -4,10 +4,10 @@ import { cn } from "../utils/cn";
 // Authentic CS 1.6 screenshots (from the Steam store page, 1024x768 originals
 // resized to 640x480). Crosshair is overlaid dead-center — true POV testing.
 const MAP_SCENES = [
-  { id: "dust2", name: "dust2", src: "/maps/dust2.jpg" },
-  { id: "inferno", name: "inferno", src: "/maps/inferno.jpg" },
-  { id: "nuke", name: "nuke", src: "/maps/nuke.jpg" },
-  { id: "train", name: "train", src: "/maps/train.jpg" },
+  { id: "italy", name: "italy", src: "/maps/italy.jpg" },
+  { id: "office", name: "office", src: "/maps/office.jpg" },
+  { id: "chateau", name: "chateau", src: "/maps/chateau.jpg" },
+  { id: "dust", name: "dust", src: "/maps/dust.jpg" },
 ];
 
 export default function CrosshairPreview({

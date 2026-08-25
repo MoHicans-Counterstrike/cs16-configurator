@@ -2,10 +2,12 @@ import { legends, legendGroups } from "../data/legends";
 import { cn } from "../utils/cn";
 import ProAvatar from "./ProAvatar";
 import { useLayoutEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 // Clan-grouped legend grid with generated pixel avatars.
-// Hover story card renders in a PORTAL with position:fixed so it always
-// sits above every other element (z-index 9999), never clipped.
+// Story card is rendered through a REAL DOM portal into document.body
+// with position:fixed + z-index 999999 — physically impossible to be
+// covered by anything on the page.
 
 function StoryCard({ id, anchor }: { id: string; anchor: DOMRect }) {
   const l = legends.find((x) => x.id === id)!;
@@ -17,22 +19,20 @@ function StoryCard({ id, anchor }: { id: string; anchor: DOMRect }) {
     const r = ref.current.getBoundingClientRect();
     let left = anchor.left;
     let top = anchor.bottom + 8;
-    // flip up if overflowing bottom
     if (top + r.height > window.innerHeight - 8) {
       top = Math.max(8, anchor.top - r.height - 8);
     }
-    // clamp right edge
     if (left + r.width > window.innerWidth - 8) {
       left = window.innerWidth - r.width - 8;
     }
     setPos({ top, left });
   }, [anchor]);
 
-  return (
+  return createPortal(
     <div
       ref={ref}
-      className="fixed z-[9999] w-72 p-3 rounded-lg bg-zinc-950 border border-orange-500/40 shadow-2xl shadow-black pointer-events-none"
-      style={{ top: pos.top, left: pos.left }}
+      className="fixed w-72 p-3 rounded-lg bg-zinc-950 border border-orange-500/50 shadow-[0_0_40px_rgba(0,0,0,0.9)] pointer-events-none"
+      style={{ top: pos.top, left: pos.left, zIndex: 2147483647 }}
     >
       <div className="flex items-center gap-2 mb-1.5">
         <ProAvatar name={l.name} clan={l.team} size={32} />
@@ -56,7 +56,8 @@ function StoryCard({ id, anchor }: { id: string; anchor: DOMRect }) {
       <div className="mt-2 pt-2 border-t border-zinc-800 text-[10px] font-mono text-orange-400/70">
         click to load → tweak into your own
       </div>
-    </div>
+    </div>,
+    document.body // portal target: OUTSIDE the app tree, above everything
   );
 }
 
@@ -65,7 +66,6 @@ export default function LegendsSidebar({ onLoad }: { onLoad: (id: string) => voi
 
   return (
     <>
-      {/* portal-ish card rendered at root level via fixed positioning */}
       {hovered && <StoryCard id={hovered.id} anchor={hovered.rect} />}
 
       <div className="mt-4 bg-zinc-900/50 border border-zinc-800 rounded-lg overflow-visible backdrop-blur">
@@ -86,26 +86,26 @@ export default function LegendsSidebar({ onLoad }: { onLoad: (id: string) => voi
                   <span className="ml-auto text-[9px] font-mono text-zinc-600">{members.length}</span>
                 </div>
 
-                {/* member avatar row */}
                 <div className="flex gap-1.5 px-1 pb-1 flex-wrap">
                   {members.map((l) => (
                     <button
                       key={l!.id}
-                      onClick={() => onLoad(l!.id)}
-                      onMouseEnter={(e) => {
-                        const rect = e.currentTarget.getBoundingClientRect();
-                        setHovered({ id: l!.id, rect });
+                      onClick={() => {
+                        onLoad(l!.id);
+                        setHovered(null);
                       }}
+                      onMouseEnter={(e) =>
+                        setHovered({ id: l!.id, rect: e.currentTarget.getBoundingClientRect() })
+                      }
                       onMouseLeave={() => setHovered(null)}
-                      onFocus={(e) => {
-                        const rect = e.currentTarget.getBoundingClientRect();
-                        setHovered({ id: l!.id, rect });
-                      }}
+                      onFocus={(e) =>
+                        setHovered({ id: l!.id, rect: e.currentTarget.getBoundingClientRect() })
+                      }
                       onBlur={() => setHovered(null)}
                       aria-label={`${l!.name} — load config`}
                       className={cn(
                         "block rounded-md transition-transform hover:scale-110 active:scale-95",
-                        "ring-0 hover:ring-2 ring-orange-500/60 relative z-10"
+                        "ring-0 hover:ring-2 ring-orange-500/60"
                       )}
                     >
                       <ProAvatar name={l!.name} clan={group.clan} size={40} />
