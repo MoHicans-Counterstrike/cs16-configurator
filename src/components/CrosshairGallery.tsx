@@ -1,7 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { cn } from "../utils/cn";
 
-// Authentic CS 1.6 crosshair settings — matches actual game commands
 const CROSSHAIR_PRESETS = [
   { id: "classic_green", name: "Classic Green", color: "50 250 50", size: "small", translucent: 0, dynamic: 0 },
   { id: "classic_cyan", name: "Classic Cyan", color: "0 255 255", size: "small", translucent: 0, dynamic: 0 },
@@ -26,42 +25,16 @@ const MAP_SCENES = [
 ];
 
 export default function CrosshairGallery() {
-  const [selected, setSelected] = useState<string | null>("classic_green");
-  const [scene, setScene] = useState<string>("italy");
-  const [spread, setSpread] = useState(0);
-  const crosshair = CROSSHAIR_PRESETS.find((c) => c.id === selected);
+  const [selected, setSelected] = useState("classic_green");
+  const [scene, setScene] = useState("italy");
 
-  useEffect(() => {
-    if (!crosshair?.dynamic) {
-      setSpread(0);
-      return;
-    }
-    let up = true;
-    const interval = setInterval(() => {
-      setSpread((s) => {
-        if (up) {
-          const n = s + 1;
-          if (n >= 10) up = false;
-          return n;
-        }
-        const n = s - 1;
-        if (n <= 0) up = true;
-        return n;
-      });
-    }, 90);
-    return () => clearInterval(interval);
-  }, [crosshair?.dynamic]);
+  const crosshair = CROSSHAIR_PRESETS.find((c) => c.id === selected) || CROSSHAIR_PRESETS[0];
+  const [r, g, b] = crosshair.color.split(/\s+/).map(Number);
 
-  const rgb = (color: string) => {
-    const parts = color.split(/\s+/).map(Number);
-    return `rgb(${parts[0] || 0}, ${parts[1] || 255}, ${parts[2] || 0})`;
-  };
-
-  const gapBase = { auto: 6, small: 5, medium: 8, large: 12 }[crosshair?.size ?? "small"] ?? 5;
-  const len = { auto: 9, small: 7, medium: 11, large: 16 }[crosshair?.size ?? "small"] ?? 7;
-  const gap = gapBase + spread * 0.9;
-  const thickness = crosshair?.translucent === 2 ? 1 : 2;
-  const opacity = crosshair?.translucent === 0 ? 1 : crosshair?.translucent === 1 ? 0.65 : 0.4;
+  const gapBase = { auto: 6, small: 5, medium: 8, large: 12 }[crosshair.size] || 5;
+  const len = { auto: 9, small: 7, medium: 11, large: 16 }[crosshair.size] || 7;
+  const thickness = crosshair.translucent === 2 ? 1 : 2;
+  const opacity = crosshair.translucent === 0 ? 1 : crosshair.translucent === 1 ? 0.65 : 0.4;
 
   return (
     <div className="space-y-4">
@@ -78,66 +51,65 @@ export default function CrosshairGallery() {
         <div className="relative w-full overflow-hidden rounded-lg border border-zinc-700 shadow-inner shadow-black/60">
           <div className="relative" style={{ paddingBottom: "75%" }}>
             {MAP_SCENES.map((s) => (
-              <img key={s.id} src={s.src} alt={`CS 1.6 ${s.name}`} className="absolute inset-0 w-full h-full object-cover" draggable={false} style={{ display: scene === s.id ? "block" : "none" }} />
+              <img key={s.id} src={s.src} alt={s.name} className="absolute inset-0 w-full h-full object-cover" style={{ display: scene === s.id ? "block" : "none" }} />
             ))}
             <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.25) 100%)" }} />
             <svg className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 overflow-visible" width="120" height="120" viewBox="-60 -60 120 120">
-              <g stroke={rgb(crosshair?.color ?? "50 250 50")} strokeWidth={thickness} opacity={opacity}>
-                <line x1={0} y1={-gap} x2={0} y2={-gap - len} />
-                <line x1={0} y1={gap} x2={0} y2={gap + len} />
-                <line x1={-gap} y1={0} x2={-gap - len} y2={0} />
-                <line x1={gap} y1={0} x2={gap + len} y2={0} />
+              <g stroke={`rgb(${r},${g},${b})`} strokeWidth={thickness} opacity={opacity}>
+                <line x1={0} y1={-gapBase} x2={0} y2={-gapBase - len} />
+                <line x1={0} y1={gapBase} x2={0} y2={gapBase + len} />
+                <line x1={-gapBase} y1={0} x2={-gapBase - len} y2={0} />
+                <line x1={gapBase} y1={0} x2={gapBase + len} y2={0} />
               </g>
             </svg>
           </div>
         </div>
         <div className="flex items-center justify-between mt-2 text-[10px] font-mono text-zinc-500">
-          <span>{crosshair?.name} · {crosshair?.size}{crosshair?.dynamic ? " · dynamic" : ""}</span>
-          <span style={{ color: rgb(crosshair?.color ?? "50 250 50") }}>■ your color</span>
+          <span>{crosshair.name} · {crosshair.size}{crosshair.dynamic ? " · dynamic" : ""}</span>
+          <span style={{ color: `rgb(${r},${g},${b})` }}>■</span>
         </div>
       </div>
 
       {/* Config Output */}
-      {crosshair && (
-        <div className="bg-zinc-900/40 border border-zinc-800 rounded-lg p-4">
-          <p className="text-xs font-mono text-zinc-300 mb-2">Console Commands</p>
-          <div className="space-y-1">
-            {[
-              { cmd: `cl_crosshair_color "${crosshair.color}"`, label: "color" },
-              { cmd: `cl_crosshair_size ${crosshair.size}`, label: "size" },
-              { cmd: `cl_crosshair_translucent ${crosshair.translucent}`, label: "translucent" },
-              { cmd: `cl_dynamiccrosshair ${crosshair.dynamic}`, label: "dynamic" },
-            ].map(({ cmd, label }) => (
-              <div key={label} className="flex items-center justify-between px-3 py-1.5 rounded bg-zinc-950 border border-zinc-800">
-                <code className="text-[11px] font-mono text-orange-300">{cmd}</code>
-                <button onClick={() => navigator.clipboard.writeText(cmd)} className="text-[10px] font-mono text-zinc-500 hover:text-orange-300">copy</button>
-              </div>
-            ))}
-          </div>
+      <div className="bg-zinc-900/40 border border-zinc-800 rounded-lg p-4">
+        <p className="text-xs font-mono text-zinc-300 mb-2">Console Commands</p>
+        <div className="space-y-1">
+          {[
+            `cl_crosshair_color "${crosshair.color}"`,
+            `cl_crosshair_size ${crosshair.size}`,
+            `cl_crosshair_translucent ${crosshair.translucent}`,
+            `cl_dynamiccrosshair ${crosshair.dynamic}`,
+          ].map((cmd) => (
+            <div key={cmd} className="flex items-center justify-between px-3 py-1.5 rounded bg-zinc-950 border border-zinc-800">
+              <code className="text-[11px] font-mono text-orange-300">{cmd}</code>
+              <button onClick={() => navigator.clipboard.writeText(cmd)} className="text-[10px] font-mono text-zinc-500 hover:text-orange-300">copy</button>
+            </div>
+          ))}
         </div>
-      )}
+      </div>
 
       {/* Gallery Grid */}
       <div className="bg-zinc-900/40 border border-zinc-800 rounded-lg p-4">
         <p className="text-xs font-mono text-zinc-300 mb-3">Presets</p>
         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
           {CROSSHAIR_PRESETS.map((c) => {
-            const [r, g, b] = c.color.split(/\s+/).map(Number);
+            const [cr, cg, cb] = c.color.split(/\s+/).map(Number);
+            const gap = { auto: 5, small: 4, medium: 7, large: 11 }[c.size];
+            const lineLen = { auto: 9, small: 7, medium: 11, large: 16 }[c.size];
             return (
-              <button key={c.id} onClick={() => setSelected(c.id)} className={cn("aspect-square rounded border flex flex-col items-center justify-center transition-all relative p-1", selected === c.id ? "border-orange-500 bg-orange-500/10" : "border-zinc-700 hover:border-zinc-500")}>
+              <button key={c.id} onClick={() => setSelected(c.id)} className={cn("aspect-square rounded border flex flex-col items-center justify-center transition-all p-1", selected === c.id ? "border-orange-500 bg-orange-500/10" : "border-zinc-700 hover:border-zinc-500")}>
                 <svg width="32" height="32" viewBox="-16 -16 32 32" className="mb-1">
-                  <g stroke={`rgb(${r},${g},${b})`} strokeWidth={c.translucent === 2 ? 1 : 2} opacity={c.translucent === 0 ? 1 : c.translucent === 1 ? 0.65 : 0.4}>
+                  <g stroke={`rgb(${cr},${cg},${cb})`} strokeWidth={c.translucent === 2 ? 1 : 2} opacity={c.translucent === 0 ? 1 : c.translucent === 1 ? 0.65 : 0.4}>
                     {c.translucent !== 2 && (
                       <>
-                        <line x1={0} y1={-({auto:5,small:4,medium:7,large:11}[c.size])} x2={0} y2={-({auto:5,small:4,medium:7,large:11}[c.size])-({auto:9,small:7,medium:11,large:16}[c.size])} />
-                        <line x1={0} y1={({auto:5,small:4,medium:7,large:11}[c.size])} x2={0} y2={({auto:5,small:4,medium:7,large:11}[c.size])+({auto:9,small:7,medium:11,large:16}[c.size])} />
-                        <line x1={-({auto:5,small:4,medium:7,large:11}[c.size])} y1={0} x2={-({auto:5,small:4,medium:7,large:11}[c.size])-({auto:9,small:7,medium:11,large:16}[c.size])} y2={0} />
-                        <line x1={({auto:5,small:4,medium:7,large:11}[c.size])} y1={0} x2={({auto:5,small:4,medium:7,large:11}[c.size])+({auto:9,small:7,medium:11,large:16}[c.size])} y2={0} />
+                        <line x1={0} y1={-gap} x2={0} y2={-gap - lineLen} />
+                        <line x1={0} y1={gap} x2={0} y2={gap + lineLen} />
+                        <line x1={-gap} y1={0} x2={-gap - lineLen} y2={0} />
+                        <line x1={gap} y1={0} x2={gap + lineLen} y2={0} />
                       </>
                     )}
-                    {c.translucent === 2 && <circle cx={0} cy={0} r={2} fill={`rgb(${r},${g},${b})`} />}
+                    {c.translucent === 2 && <circle cx={0} cy={0} r={2} fill={`rgb(${cr},${cg},${cb})`} />}
                   </g>
-                  {c.dynamic && <circle cx={0} cy={0} r={10} fill="none" stroke={`rgb(${r},${g},${b})`} strokeWidth={0.5} strokeDasharray="2 2" className="animate-pulse" />}
                 </svg>
                 <span className="text-[8px] font-mono text-zinc-400 truncate w-full text-center">{c.name}</span>
               </button>
