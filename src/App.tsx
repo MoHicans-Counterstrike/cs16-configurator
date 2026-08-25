@@ -98,7 +98,7 @@ function SettingRow({ setting, value, onChange }: { setting: any; value: any; on
   return (
     <div className="group border-b border-zinc-800/70 py-3.5 hover:bg-zinc-900/40 transition-colors px-4">
       <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4">
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 min-w-0 flex flex-col justify-center">
           <div className="flex items-center gap-2 flex-wrap">
             <span className="text-amber-100 font-medium text-sm">{setting.name}</span>
             <code className="text-xs font-mono text-orange-400 bg-zinc-900 px-1.5 py-0.5 rounded border border-zinc-800">
@@ -278,19 +278,18 @@ export default function App() {
         }}
       />
 
-      {/* Mohicans brand banner — compact, fades INTO the content below */}
+      {/* Mohicans brand banner — image anchored to TOP edge (text visible at top) */}
       <header className="relative min-h-[240px] sm:min-h-[280px] lg:min-h-[320px] overflow-hidden border-b border-zinc-800 bg-zinc-950">
         <img
           src="/images/mohicans-logo.jpg"
           alt="Mohicans tactical logo banner"
-          className="absolute inset-0 h-full w-full object-cover object-center"
+          className="absolute inset-0 h-full w-full object-cover object-top"
         />
-        {/* fade the image into page background: strong at bottom (95% opaque), light at top */}
         <div
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(to bottom, rgba(9,9,11,0.55) 0%, rgba(9,9,11,0.25) 40%, rgba(9,9,11,0.95) 100%)",
+              "linear-gradient(to bottom, rgba(9,9,11,0.35) 0%, rgba(9,9,11,0.45) 45%, rgba(9,9,11,0.95) 100%)",
           }}
         />
         <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/70 via-transparent to-transparent" />
@@ -391,7 +390,7 @@ export default function App() {
           </button>
         </div>
 
-        {/* Page tabs — clean underline bar (restored NICE design, extended to 5 tools) */}
+        {/* Page tabs — clean underline bar */}
         <div className="mb-3 flex gap-1 border-b border-zinc-800 overflow-x-auto">
           {([
             { id: "config", label: "Config Generator" },
@@ -415,53 +414,56 @@ export default function App() {
           ))}
         </div>
 
-        {pageTab === "binds" ? (
-          <BindsBuilder />
-        ) : pageTab === "rank" ? (
-          <Leaderboard />
-        ) : pageTab === "demo" ? (
-          <div className="mb-4 grid md:grid-cols-2 gap-4">
+        {/* TAB: Binds & Buy Menu */}
+        {pageTab === "binds" && <BindsBuilder />}
+
+        {/* TAB: Rangliste */}
+        {pageTab === "rank" && <Leaderboard />}
+
+        {/* TAB: Demo Analyzer */}
+        {pageTab === "demo" && (
+          <div className="grid md:grid-cols-2 gap-4">
             <div>
               <DemoUploader />
-              <p className="mt-3 text-[10px] font-mono text-zinc-600 leading-relaxed">
+              <p className="mt-3 text-[10px] font-mono text-zinc-500 leading-relaxed">
                 Drop any .dem from Counter-Strike (1.6, CZ, Condition Zero) or other GoldSrc
-                games (Half-Life, TFC, DoD). Header is read locally — nothing is uploaded.
-                We parse the 4-byte HLDEMO magic, demo protocol, netcode protocol, map
-                name, mod directory and engine directory.
+                games. Header is read locally — nothing is uploaded.
               </p>
             </div>
-            <div className="bg-zinc-900/40 border border-zinc-800 rounded-lg p-4 text-[11px] font-mono text-zinc-500 space-y-2">
+            <div className="bg-zinc-900/40 border border-zinc-800 rounded-lg p-4 text-[11px] font-mono text-zinc-400 space-y-2">
               <p className="text-orange-400 text-xs uppercase tracking-wider">About CS 1.6 demos</p>
               <p>
                 <code className="text-amber-300">.dem</code> files record every player's
-                actions on the server. Valve documented the format in the Half-Life SDK —
-                the 600-byte header carries map, mod and timing info; the body is a series
-                of "frames" (64/sec typical) with deltas of player positions, view angles,
-                shots, kills, chat, etc.
+                actions on the server. The 600-byte header carries map, mod and timing info.
               </p>
               <p>
-                For full event extraction (K/D per player, chat history, round scores)
-                you'd want to use{" "}
-                <a
-                  href="https://github.com/YaLTeR/hldemo-rs"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-sky-400 underline decoration-dotted hover:text-sky-300"
-                >
+                For full event extraction (K/D, chat, round scores) use{" "}
+                <a href="https://github.com/YaLTeR/hldemo-rs" target="_blank" rel="noreferrer" className="text-sky-400 underline decoration-dotted">
                   hldemo-rs
                 </a>{" "}
                 on the server side.
               </p>
             </div>
           </div>
-        ) : pageTab === "netcode" ? (
-          <NetcodeCalc />
-        ) : (
-          <></>
         )}
 
+        {/* TAB: Netcode */}
+        {pageTab === "netcode" && <NetcodeCalc />}
+
+        {/* TAB: Config Generator (default) */}
+        {pageTab === "config" && (
+        <>
+        {/* Action bar */}
+        <div className="mb-4 flex gap-2 flex-wrap items-center bg-zinc-900/60 border border-zinc-700 rounded-lg px-3 py-2.5 sticky top-0 z-30 backdrop-blur">
+          <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest mr-1 hidden sm:inline">Actions</span>
+          <button onClick={handleDownload} className="px-5 py-2 rounded bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-400 hover:to-amber-400 text-zinc-950 font-bold text-sm transition-all shadow-[0_0_20px_rgba(251,146,60,0.35)]">↓ DOWNLOAD autoexec.cfg</button>
+          <button onClick={handleCopy} className="px-4 py-2 rounded border border-orange-500/50 hover:bg-orange-500/10 text-orange-300 hover:text-orange-200 text-sm font-mono transition-colors">{copied ? "✓ COPIED" : "COPY CONFIG"}</button>
+          <button onClick={handleShare} className="px-4 py-2 rounded border border-sky-500/50 hover:bg-sky-500/10 text-sky-300 hover:text-sky-200 text-sm font-mono transition-colors" title="Copy a link that restores this exact config">{shareCopied ? "✓ LINK COPIED" : "🔗 SHARE"}</button>
+          <div className="flex-1" />
+          <button onClick={handleReset} className="px-3 py-2 rounded border border-zinc-700 hover:border-red-500/50 text-zinc-400 hover:text-red-300 text-xs font-mono transition-colors">RESET</button>
+        </div>
+
         <div className="grid lg:grid-cols-[260px_1fr_380px] gap-4">
-          {/* Left nav */}
           <nav className="lg:sticky lg:top-4 lg:self-start h-fit">
             <div className="bg-zinc-900/50 border border-zinc-800 rounded-lg overflow-hidden backdrop-blur">
               <div className="px-4 py-3 border-b border-zinc-800 bg-zinc-900/80">
@@ -469,16 +471,7 @@ export default function App() {
               </div>
               <div className="p-2">
                 {categories.map((cat) => (
-                  <button
-                    key={cat.id}
-                    onClick={() => setActiveTab(cat.id)}
-                    className={cn(
-                      "w-full text-left px-3 py-2.5 rounded flex items-center gap-3 mb-1 transition-all group",
-                      activeTab === cat.id
-                        ? "bg-gradient-to-r from-orange-500/20 to-transparent border-l-2 border-orange-500 text-amber-100"
-                        : "hover:bg-zinc-800/50 text-zinc-400 hover:text-amber-100"
-                    )}
-                  >
+                  <button key={cat.id} onClick={() => setActiveTab(cat.id)} className={cn("w-full text-left px-3 py-2.5 rounded flex items-center gap-3 mb-1 transition-all group", activeTab === cat.id ? "bg-gradient-to-r from-orange-500/20 to-transparent border-l-2 border-orange-500 text-amber-100" : "hover:bg-zinc-800/50 text-zinc-400 hover:text-amber-100")}>
                     <span className="text-xl">{cat.icon}</span>
                     <div className="flex-1 min-w-0">
                       <div className="font-medium text-sm">{cat.name}</div>
@@ -488,9 +481,7 @@ export default function App() {
                 ))}
               </div>
             </div>
-
             <LegendsSidebar onLoad={handleLegend} />
-
             <div className="mt-4 bg-gradient-to-br from-orange-500/10 to-transparent border border-orange-500/20 rounded-lg p-4">
               <div className="text-xs font-mono text-orange-400 uppercase mb-2">Quick Install</div>
               <ol className="text-xs text-zinc-400 space-y-1.5 font-mono list-decimal list-inside">
@@ -502,54 +493,24 @@ export default function App() {
             </div>
           </nav>
 
-          {/* Main settings panel */}
           <main className="min-w-0">
             <div className="bg-zinc-900/40 border border-zinc-800 rounded-lg overflow-hidden backdrop-blur">
-              <CategoryPanel
-                category={currentCategory}
-                values={values}
-                onChange={handleChange}
-              />
+              <CategoryPanel category={currentCategory} values={values} onChange={handleChange} />
             </div>
           </main>
 
-          {/* Right: live config preview */}
           <aside className="lg:sticky lg:top-4 lg:self-start h-fit space-y-4">
-            {/* Crosshair live preview */}
             <div className="bg-zinc-900/50 border border-zinc-800 rounded-lg overflow-hidden backdrop-blur">
               <div className="px-4 py-3 border-b border-zinc-800 bg-zinc-900/80">
                 <p className="text-xs font-mono text-zinc-500 uppercase tracking-wider">Crosshair Preview</p>
                 <p className="text-xs text-zinc-400 mt-0.5">live — changes with HUD settings</p>
               </div>
               <div className="p-3">
-                <CrosshairPreview
-                  size={String(values["cl_crosshair_size"] ?? "small")}
-                  color={String(values["cl_crosshair_color"] ?? "50 250 50")}
-                  translucent={Number(values["cl_crosshair_translucent"] ?? 0)}
-                  dynamic={Boolean(values["cl_dynamiccrosshair"])}
-                />
+                <CrosshairPreview size={String(values["cl_crosshair_size"] ?? "small")} color={String(values["cl_crosshair_color"] ?? "50 250 50")} translucent={Number(values["cl_crosshair_translucent"] ?? 0)} dynamic={!!values["cl_dynamiccrosshair"]} />
                 <EdpiMeter sensitivity={Number(values["sensitivity"] ?? 2.1)} />
               </div>
             </div>
-
-            {/* Demo analyzer */}
-            <div className="bg-zinc-900/50 border border-zinc-800 rounded-lg overflow-hidden backdrop-blur">
-              <div className="px-4 py-3 border-b border-zinc-800 bg-zinc-900/80">
-                <p className="text-xs font-mono text-zinc-500 uppercase tracking-wider">Demo Analyzer</p>
-                <p className="text-xs text-zinc-400 mt-0.5">drop a .dem — parsed locally</p>
-              </div>
-              <div className="p-3">
-                <DemoUploader />
-              </div>
-            </div>
-
-            {/* Upload your own config */}
-            <ConfigUploader
-              onApply={(values) => {
-                setValues((prev) => ({ ...prev, ...values }));
-              }}
-            />
-
+            <ConfigUploader onApply={(v) => setValues((prev) => ({ ...prev, ...v }))} />
             <div className="bg-zinc-900/50 border border-zinc-800 rounded-lg overflow-hidden backdrop-blur">
               <div className="px-4 py-3 border-b border-zinc-800 bg-zinc-900/80 flex items-center justify-between">
                 <div>
@@ -560,31 +521,17 @@ export default function App() {
               </div>
               <pre className="p-4 text-xs font-mono text-amber-100/80 leading-relaxed max-h-[70vh] overflow-auto whitespace-pre-wrap break-all">
                 <code>{config.split("\n").map((line, i) => {
-                  if (line.startsWith("//")) {
-                    return (
-                      <div key={i} className="text-zinc-500">
-                        {line}
-                      </div>
-                    );
-                  }
+                  if (line.startsWith("//")) return <div key={i} className="text-zinc-500">{line}</div>;
                   const [cmd, ...rest] = line.split(/\s+/);
                   if (!cmd) return <div key={i}>&nbsp;</div>;
-                  return (
-                    <div key={i}>
-                      <span className="text-orange-400">{cmd}</span>
-                      {rest.length > 0 && (
-                        <>
-                          {" "}
-                          <span className="text-amber-200">{rest.join(" ")}</span>
-                        </>
-                      )}
-                    </div>
-                  );
+                  return <div key={i}><span className="text-orange-400">{cmd}</span> <span className="text-amber-100/60">{rest.join(" ")}</span></div>;
                 })}</code>
               </pre>
             </div>
           </aside>
         </div>
+        </>
+        )}
 
         {/* Footer tips — single compact strip */}
         <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 items-center bg-zinc-900/40 border border-zinc-800 rounded-lg px-4 py-3 text-[11px] font-mono text-zinc-500">
