@@ -191,6 +191,19 @@ export default function App() {
   const [crtMode, setCrtMode] = useState<"off" | "mild" | "full">("mild");
   const [downloadCount, setDownloadCount] = useState<number | null>(null);
 
+  // Sync pageTab with URL hash for shareable tabs
+  useEffect(() => {
+    const hash = window.location.hash.slice(1);
+    if (hash) {
+      const validTabs = ["config", "binds", "server", "rank", "demo", "netcode", "launch", "proconfigs", "prodb", "weapons", "netgraph", "crosshair", "ts3", "timer"];
+      if (validTabs.includes(hash)) setPageTab(hash as any);
+    }
+  }, []);
+
+  useEffect(() => {
+    window.location.hash = pageTab;
+  }, [pageTab]);
+
   // fetch download counter once
   useEffect(() => {
     fetch("/api/count", { cache: "no-store" })
