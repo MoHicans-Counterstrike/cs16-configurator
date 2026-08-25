@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { cn } from "../utils/cn";
 
-// CS 1.6 Crosshair Gallery — live preview like start page
-const CROSSHAIRS = [
+// Authentic CS 1.6 crosshair settings — matches actual game commands
+const CROSSHAIR_PRESETS = [
   { id: "classic_green", name: "Classic Green", color: "50 250 50", size: "small", translucent: 0, dynamic: 0 },
   { id: "classic_cyan", name: "Classic Cyan", color: "0 255 255", size: "small", translucent: 0, dynamic: 0 },
   { id: "classic_red", name: "Classic Red", color: "255 50 50", size: "small", translucent: 0, dynamic: 0 },
@@ -10,127 +10,149 @@ const CROSSHAIRS = [
   { id: "small_green", name: "Small Green", color: "50 250 50", size: "small", translucent: 0, dynamic: 0 },
   { id: "medium_green", name: "Medium Green", color: "50 250 50", size: "medium", translucent: 0, dynamic: 0 },
   { id: "large_green", name: "Large Green", color: "50 250 50", size: "large", translucent: 0, dynamic: 0 },
-  { id: "dot_crosshair", name: "Dot", color: "50 250 50", size: "large", translucent: 1, dynamic: 0 },
+  { id: "auto_green", name: "Auto Size", color: "50 250 50", size: "auto", translucent: 0, dynamic: 0 },
+  { id: "dot_green", name: "Dot Only", color: "50 250 50", size: "large", translucent: 2, dynamic: 0 },
   { id: "dynamic_green", name: "Dynamic Green", color: "50 250 50", size: "small", translucent: 0, dynamic: 1 },
   { id: "dynamic_cyan", name: "Dynamic Cyan", color: "0 255 255", size: "small", translucent: 0, dynamic: 1 },
   { id: "dynamic_white", name: "Dynamic White", color: "255 255 255", size: "small", translucent: 0, dynamic: 1 },
-  { id: "translucent_green", name: "Translucent Green", color: "50 250 50", size: "small", translucent: 1, dynamic: 0 },
+  { id: "translucent_green", name: "Translucent", color: "50 250 50", size: "small", translucent: 1, dynamic: 0 },
+];
+
+// Map scenes for POV preview
+const MAP_SCENES = [
+  { id: "italy", name: "italy", src: "/maps/italy.jpg" },
+  { id: "office", name: "office", src: "/maps/office.jpg" },
+  { id: "chateau", name: "chateau", src: "/maps/chateau.jpg" },
+  { id: "dust", name: "dust", src: "/maps/dust.jpg" },
 ];
 
 export default function CrosshairGallery() {
-  const [selected, setSelected] = useState<string | null>(null);
-  const [liveColor, setLiveColor] = useState("50 250 50");
-  const [liveSize, setLiveSize] = useState("small");
-  const [liveTranslucent, setLiveTranslucent] = useState(0);
-  const [liveDynamic, setLiveDynamic] = useState(0);
+  const [selected, setSelected] = useState<string | null>("classic_green");
+  const [scene, setScene] = useState<string>("italy");
+  const [spread, setSpread] = useState(0);
   const crosshair = CROSSHAIRS.find((c) => c.id === selected);
 
-  const [r, g, b] = liveColor.split(" ").map(Number);
+  // Dynamic crosshair animation
+  useState(() => {
+    if (!crosshair?.dynamic) {
+      setSpread(0);
+      return;
+    }
+    let up = true;
+    const interval = setInterval(() => {
+      setSpread((s) => {
+        if (up) {
+          const n = s + 1;
+          if (n >= 10) up = false;
+          return n;
+        }
+        const n = s - 1;
+        if (n <= 0) up = true;
+        return n;
+      });
+    }, 90);
+    return () => clearInterval(interval);
+  });
+
+  const rgb = (color: string) => {
+    const parts = color.split(/\s+/).map(Number);
+    return `rgb(${parts[0] || 0}, ${parts[1] || 255}, ${parts[2] || 0})`;
+  };
+
+  const gapBase = { auto: 6, small: 5, medium: 8, large: 12 }[crosshair?.size ?? "small"] ?? 5;
+  const len = { auto: 9, small: 7, medium: 11, large: 16 }[crosshair?.size ?? "small"] ?? 7;
+  const gap = gapBase + spread * 0.9;
+  const thickness = crosshair?.translucent === 2 ? 1 : 2;
+  const opacity = crosshair?.translucent === 0 ? 1 : crosshair?.translucent === 1 ? 0.65 : 0.4;
 
   return (
-    <div className="grid md:grid-cols-[1fr_1fr] gap-4">
-      {/* Live Preview */}
+    <div className="space-y-4">
+      {/* POV Preview */}
       <div className="bg-zinc-900/40 border border-zinc-800 rounded-lg p-4">
-        <p className="text-xs font-mono text-zinc-300 mb-3">Live Preview</p>
-        <div className="relative aspect-video bg-zinc-950 rounded-lg overflow-hidden mb-4">
-          {/* Simulated game view */}
-          <div className="absolute inset-0 bg-gradient-to-b from-zinc-800/50 to-zinc-900/50" />
-          {/* Crosshair */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="relative">
-              {/* Center dot */}
-              <div
-                className={cn("rounded-full transition-all", liveTranslucent ? "opacity-50" : "opacity-100")}
-                style={{
-                  width: liveSize === "small" ? 4 : liveSize === "medium" ? 8 : 12,
-                  height: liveSize === "small" ? 4 : liveSize === "medium" ? 8 : 12,
-                  backgroundColor: `rgb(${r},${g},${b})`,
-                }}
-              />
-              {/* Crosshair lines */}
-              {!liveTranslucent && (
-                <>
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-0.5" style={{ backgroundColor: `rgb(${r},${g},${b})` }} />
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-0.5 h-6" style={{ backgroundColor: `rgb(${r},${g},${b})` }} />
-                </>
-              )}
-              {liveDynamic && (
-                <div className="absolute inset-0 border border-dashed border-orange-500/50 rounded-full animate-pulse" style={{ width: 40, height: 40, margin: "auto", top: -16, left: -16 }} />
-              )}
-            </div>
+        <div className="flex items-center justify-between mb-3">
+          <p className="text-xs font-mono text-zinc-300">Live POV Preview</p>
+          <div className="flex gap-1">
+            {MAP_SCENES.map((s) => (
+              <button key={s.id} onClick={() => setScene(s.id)} className={cn("px-2 py-1 rounded text-[10px] font-mono border transition-all", scene === s.id ? "border-orange-500 text-orange-300 bg-orange-500/10" : "border-zinc-700 text-zinc-400")}>{s.name}</button>
+            ))}
           </div>
         </div>
-
-        {/* Controls */}
-        <div className="space-y-3">
-          <div>
-            <label className="text-[10px] font-mono text-zinc-400 uppercase">Color (R G B)</label>
-            <input type="text" value={liveColor} onChange={(e) => setLiveColor(e.target.value)} className="w-full mt-1 bg-zinc-800 border border-zinc-700 rounded px-3 py-2 text-xs font-mono text-zinc-200" />
+        <div className="relative w-full overflow-hidden rounded-lg border border-zinc-700 shadow-inner shadow-black/60">
+          <div className="relative" style={{ paddingBottom: "75%" }}>
+            {MAP_SCENES.map((s) => (
+              <img key={s.id} src={s.src} alt={`CS 1.6 ${s.name}`} className="absolute inset-0 w-full h-full object-cover" draggable={false} style={{ display: scene === s.id ? "block" : "none" }} />
+            ))}
+            <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.25) 100%)" }} />
+            {/* Crosshair */}
+            <svg className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 overflow-visible" width="120" height="120" viewBox="-60 -60 120 120">
+              <g stroke={rgb(crosshair?.color ?? "50 250 50")} strokeWidth={thickness} opacity={opacity}>
+                <line x1={0} y1={-gap} x2={0} y2={-gap - len} />
+                <line x1={0} y1={gap} x2={0} y2={gap + len} />
+                <line x1={-gap} y1={0} x2={-gap - len} y2={0} />
+                <line x1={gap} y1={0} x2={gap + len} y2={0} />
+              </g>
+            </svg>
           </div>
-          <div>
-            <label className="text-[10px] font-mono text-zinc-400 uppercase">Size</label>
-            <div className="flex gap-1 mt-1">
-              {(["small", "medium", "large"] as const).map((s) => (
-                <button key={s} onClick={() => setLiveSize(s)} className={cn("px-3 py-1.5 rounded text-xs font-mono border transition-all", liveSize === s ? "border-orange-500 bg-orange-500/10 text-orange-200" : "border-zinc-700 text-zinc-400")}>{s}</button>
-              ))}
-            </div>
-          </div>
-          <div className="flex gap-2">
-            <label className={cn("px-3 py-1.5 rounded text-xs font-mono border cursor-pointer transition-all", liveTranslucent ? "border-orange-500 bg-orange-500/10 text-orange-200" : "border-zinc-700 text-zinc-400")} onClick={() => setLiveTranslucent(1 - liveTranslucent)}>Translucent</label>
-            <label className={cn("px-3 py-1.5 rounded text-xs font-mono border cursor-pointer transition-all", liveDynamic ? "border-orange-500 bg-orange-500/10 text-orange-200" : "border-zinc-700 text-zinc-400")} onClick={() => setLiveDynamic(1 - liveDynamic)}>Dynamic</label>
-          </div>
-          <div className="p-2 rounded bg-zinc-950 border border-zinc-800">
-            <code className="text-[10px] font-mono text-amber-200">
-              cl_crosshair_color "{liveColor}"; cl_crosshair_size {liveSize}; cl_crosshair_translucent {liveTranslucent}; cl_dynamiccrosshair {liveDynamic}
-            </code>
-          </div>
+        </div>
+        <div className="flex items-center justify-between mt-2 text-[10px] font-mono text-zinc-500">
+          <span>{crosshair?.name} · {crosshair?.size}{crosshair?.dynamic ? " · dynamic" : ""}</span>
+          <span style={{ color: rgb(crosshair?.color ?? "50 250 50") }}>■ your color</span>
         </div>
       </div>
 
-      {/* Gallery */}
-      <div className="bg-zinc-900/40 border border-zinc-800 rounded-lg p-4">
-        <p className="text-xs font-mono text-zinc-300 mb-3">Gallery</p>
-        <div className="grid grid-cols-3 gap-2">
-          {CROSSHAIRS.map((c) => (
-            <button
-              key={c.id}
-              onClick={() => { setSelected(c.id); setLiveColor(c.color); setLiveSize(c.size); setLiveTranslucent(c.translucent); setLiveDynamic(c.dynamic); }}
-              className={cn(
-                "aspect-square rounded border flex items-center justify-center transition-all relative",
-                selected === c.id ? "border-orange-500 bg-orange-500/10" : "border-zinc-700 hover:border-zinc-500"
-              )}
-            >
-              <CrosshairPreview color={c.color} size={c.size} translucent={c.translucent} dynamic={c.dynamic} />
-              <span className="absolute bottom-0.5 left-0.5 right-0.5 text-[8px] font-mono text-zinc-400 truncate text-center">{c.name}</span>
-            </button>
-          ))}
-        </div>
-        {crosshair && (
-          <div className="mt-3 p-2 rounded bg-zinc-950 border border-zinc-800">
-            <p className="text-[10px] font-mono text-orange-400 mb-1">{crosshair.name}</p>
-            <code className="text-[9px] font-mono text-amber-200">
-              cl_crosshair_color "{crosshair.color}"; cl_crosshair_size {crosshair.size}; cl_crosshair_translucent {crosshair.translucent}; cl_dynamiccrosshair {crosshair.dynamic}
-            </code>
+      {/* Config Output */}
+      {crosshair && (
+        <div className="bg-zinc-900/40 border border-zinc-800 rounded-lg p-4">
+          <p className="text-xs font-mono text-zinc-300 mb-2">Console Commands</p>
+          <div className="space-y-1">
+            <div className="flex items-center justify-between px-3 py-1.5 rounded bg-zinc-950 border border-zinc-800">
+              <code className="text-[11px] font-mono text-orange-300">cl_crosshair_color "{crosshair.color}"</code>
+              <button onClick={() => navigator.clipboard.writeText(`cl_crosshair_color "${crosshair.color}"`)} className="text-[10px] font-mono text-zinc-500 hover:text-orange-300">copy</button>
+            </div>
+            <div className="flex items-center justify-between px-3 py-1.5 rounded bg-zinc-950 border border-zinc-800">
+              <code className="text-[11px] font-mono text-orange-300">cl_crosshair_size {crosshair.size}</code>
+              <button onClick={() => navigator.clipboard.writeText(`cl_crosshair_size ${crosshair.size}`)} className="text-[10px] font-mono text-zinc-500 hover:text-orange-300">copy</button>
+            </div>
+            <div className="flex items-center justify-between px-3 py-1.5 rounded bg-zinc-950 border border-zinc-800">
+              <code className="text-[11px] font-mono text-orange-300">cl_crosshair_translucent {crosshair.translucent}</code>
+              <button onClick={() => navigator.clipboard.writeText(`cl_crosshair_translucent ${crosshair.translucent}`)} className="text-[10px] font-mono text-zinc-500 hover:text-orange-300">copy</button>
+            </div>
+            <div className="flex items-center justify-between px-3 py-1.5 rounded bg-zinc-950 border border-zinc-800">
+              <code className="text-[11px] font-mono text-orange-300">cl_dynamiccrosshair {crosshair.dynamic}</code>
+              <button onClick={() => navigator.clipboard.writeText(`cl_dynamiccrosshair ${crosshair.dynamic}`)} className="text-[10px] font-mono text-zinc-500 hover:text-orange-300">copy</button>
+            </div>
           </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function CrosshairPreview({ color, size, translucent, dynamic }: { color: string; size: string; translucent: number; dynamic: number }) {
-  const [r, g, b] = color.split(" ").map(Number);
-  const dotSize = size === "small" ? 3 : size === "medium" ? 5 : 7;
-  return (
-    <div className="relative w-8 h-8 flex items-center justify-center">
-      <div className="rounded-full" style={{ width: dotSize, height: dotSize, backgroundColor: `rgb(${r},${g},${b})`, opacity: translucent ? 0.5 : 1 }} />
-      {!translucent && (
-        <>
-          <div className="absolute w-4 h-0.5" style={{ backgroundColor: `rgb(${r},${g},${b})` }} />
-          <div className="absolute w-0.5 h-4" style={{ backgroundColor: `rgb(${r},${g},${b})` }} />
-        </>
+        </div>
       )}
-      {dynamic && <div className="absolute inset-0 border border-dashed border-orange-500/50 rounded-full" />}
+
+      {/* Gallery Grid */}
+      <div className="bg-zinc-900/40 border border-zinc-800 rounded-lg p-4">
+        <p className="text-xs font-mono text-zinc-300 mb-3">Presets</p>
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
+          {CROSSHAIR_PRESETS.map((c) => {
+            const [r, g, b] = c.color.split(/\s+/).map(Number);
+            return (
+              <button key={c.id} onClick={() => setSelected(c.id)} className={cn("aspect-square rounded border flex flex-col items-center justify-center transition-all relative p-1", selected === c.id ? "border-orange-500 bg-orange-500/10" : "border-zinc-700 hover:border-zinc-500")}>
+                <svg width="32" height="32" viewBox="-16 -16 32 32" className="mb-1">
+                  <g stroke={`rgb(${r},${g},${b})`} strokeWidth={c.translucent === 2 ? 1 : 2} opacity={c.translucent === 0 ? 1 : c.translucent === 1 ? 0.65 : 0.4}>
+                    {c.translucent !== 2 && (
+                      <>
+                        <line x1={0} y1={-({auto:5,small:4,medium:7,large:11}[c.size])} x2={0} y2={-({auto:5,small:4,medium:7,large:11}[c.size])-({auto:9,small:7,medium:11,large:16}[c.size])} />
+                        <line x1={0} y1={({auto:5,small:4,medium:7,large:11}[c.size])} x2={0} y2={({auto:5,small:4,medium:7,large:11}[c.size])+({auto:9,small:7,medium:11,large:16}[c.size])} />
+                        <line x1={-({auto:5,small:4,medium:7,large:11}[c.size])} y1={0} x2={-({auto:5,small:4,medium:7,large:11}[c.size])-({auto:9,small:7,medium:11,large:16}[c.size])} y2={0} />
+                        <line x1={({auto:5,small:4,medium:7,large:11}[c.size])} y1={0} x2={({auto:5,small:4,medium:7,large:11}[c.size])+({auto:9,small:7,medium:11,large:16}[c.size])} y2={0} />
+                      </>
+                    )}
+                    {c.translucent === 2 && <circle cx={0} cy={0} r={2} fill={`rgb(${r},${g},${b})`} />}
+                  </g>
+                  {c.dynamic && <circle cx={0} cy={0} r={10} fill="none" stroke={`rgb(${r},${g},${b})`} strokeWidth={0.5} strokeDasharray="2 2" className="animate-pulse" />}
+                </svg>
+                <span className="text-[8px] font-mono text-zinc-400 truncate w-full text-center">{c.name}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }
