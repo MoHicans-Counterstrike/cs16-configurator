@@ -15,6 +15,7 @@ import LegendsSidebar from "./components/LegendsSidebar";
 import DemoUploader from "./components/DemoUploader";
 import BindsBuilder from "./components/BindsBuilder";
 import Leaderboard from "./components/Leaderboard";
+import NetcodeCalc from "./components/NetcodeCalc";
 import { encodeState, decodeState } from "./utils/urlState";
 import { getLegendById } from "./data/legends";
 
@@ -174,7 +175,7 @@ export default function App() {
   });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const [activeTab, setActiveTab] = useState(categories[0].id);
-  const [pageTab, setPageTab] = useState<"config" | "binds" | "rank" | "demo">("config");
+  const [pageTab, setPageTab] = useState<"config" | "binds" | "rank" | "demo" | "netcode">("config");
   const [copied, setCopied] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
   const [crtMode, setCrtMode] = useState<"off" | "mild" | "full">("mild");
@@ -347,6 +348,7 @@ export default function App() {
               </button>
             ))}
           </div>
+          <div className="flex-1" />
           {downloadCount !== null && (
             <span className="text-[10px] text-orange-400/80 font-mono">
               ⬇ {downloadCount.toLocaleString()} configs generated
@@ -358,7 +360,7 @@ export default function App() {
             }
             title="CRT scanline effect (off / mild / full)"
             className={cn(
-              "px-2.5 py-1 rounded text-xs font-mono border transition-colors ml-auto",
+              "px-2.5 py-1 rounded text-xs font-mono border transition-colors",
               crtMode === "off"
                 ? "border-zinc-700 text-zinc-500"
                 : crtMode === "full"
@@ -403,22 +405,23 @@ export default function App() {
           </button>
         </div>
 
-        {/* Tools sub-nav — sit between the main action bar and the settings grid */}
-        <div className="mb-3 flex gap-1 border-b border-zinc-800 flex-wrap">
+        {/* Tools sub-nav — prominent, between action bar and content */}
+        <div className="mb-3 flex gap-1.5 flex-wrap">
           {([
-            { id: "config", label: "Config" },
-            { id: "binds", label: "Binds & Buy Menu" },
-            { id: "rank", label: "Rangliste" },
-            { id: "demo", label: "Demo Analyzer" },
+            { id: "config", label: "⚙ Config Generator" },
+            { id: "binds", label: "🔫 Binds & Buy Menu" },
+            { id: "rank", label: "🏆 Rangliste" },
+            { id: "demo", label: "📼 Demo Analyzer" },
+            { id: "netcode", label: "📡 Netcode" },
           ] as const).map((t) => (
             <button
               key={t.id}
               onClick={() => setPageTab(t.id as any)}
               className={cn(
-                "px-3 py-1.5 text-[11px] font-mono uppercase tracking-wider transition-colors border-b-2 -mb-px",
+                "px-4 py-2 text-xs font-mono uppercase tracking-wider transition-all rounded-md border",
                 pageTab === t.id
-                  ? "border-orange-500 text-orange-300"
-                  : "border-transparent text-zinc-500 hover:text-zinc-300"
+                  ? "bg-orange-500/15 border-orange-500/60 text-orange-200 shadow-[0_0_15px_rgba(251,146,60,0.15)]"
+                  : "bg-zinc-900/60 border-zinc-700/60 text-zinc-400 hover:text-zinc-200 hover:border-zinc-500"
               )}
             >
               {t.label}
@@ -465,6 +468,8 @@ export default function App() {
               </p>
             </div>
           </div>
+        ) : pageTab === "netcode" ? (
+          <NetcodeCalc />
         ) : (
           <></>
         )}

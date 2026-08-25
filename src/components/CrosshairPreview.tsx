@@ -21,7 +21,7 @@ export default function CrosshairPreview({
   translucent: number;
   dynamic: boolean;
 }) {
-  const [scene, setScene] = useState<string>("dust2");
+  const [scene, setScene] = useState<string>("italy");
   const [spread, setSpread] = useState(0);
   const t = useRef<number | null>(null);
 
