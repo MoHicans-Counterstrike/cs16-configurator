@@ -19,8 +19,21 @@ function Dot({ ok }: { ok: boolean }) {
   );
 }
 
-// Ultra-compact 2-line network strip. Lives at the very top of the page,
-// above the header — glanceable, not a section.
+// Orange-to-transparent fade divider
+function FadeDivider() {
+  return (
+    <span className="hidden sm:flex items-center gap-[2px] mx-1" aria-hidden>
+      {[6, 4].map((h, i) => (
+        <span key={i} className="flex flex-col gap-[2px]">
+          <span className="w-[3px] h-1 bg-orange-500/50 rounded-full" style={{ height: h }} />
+          <span className="w-[3px] h-1 bg-zinc-700/70 rounded-full" />
+        </span>
+      ))}
+    </span>
+  );
+}
+
+// Ultra-compact centered status strip — very top of the page.
 export default function NetworkTicker() {
   const [status, setStatus] = useState<Status | null>(null);
 
@@ -44,50 +57,59 @@ export default function NetworkTicker() {
   const ts = status.ts;
 
   const csLabel = cs.online
-    ? `${cs.map} · ${cs.players}/${cs.maxPlayers}${cs.playerList && cs.playerList.length ? ` · ${cs.playerList.map((p) => p.name).join(", ")}` : ""}`
+    ? `${cs.map} ${cs.players}/${cs.maxPlayers}`
     : "offline";
   const tsLabel = ts.online
     ? ts.clients && ts.clients.length
-      ? `${ts.clients.map((c) => c.name).join(", ")}`
-      : "online · empty"
+      ? ts.clients.map((c) => c.name).join(", ")
+      : "empty"
     : "offline";
 
   return (
-    <div className="border-b border-orange-500/15 bg-zinc-950">
-      <div className="max-w-7xl mx-auto px-4 py-1.5 flex flex-wrap items-center gap-x-5 gap-y-1 text-[11px] font-mono">
-        {/* line items flow inline; wraps naturally on mobile */}
+    <div className="border-b border-zinc-800/80 bg-zinc-950 relative overflow-hidden">
+      {/* center fade glow */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse 60% 100% at 50% 50%, rgba(251,146,60,0.06), transparent 70%)",
+        }}
+      />
+      <div className="relative max-w-7xl mx-auto px-4 py-1.5 flex items-center justify-center flex-wrap text-[11px] font-mono">
         <a
           href="steam://connect/cs1.mohican.xyz:27015"
-          title={`CS 1.6 · ${csLabel} — click to join`}
-          className="flex items-center hover:text-orange-300 transition-colors"
+          title={`CS 1.6 server — click to join`}
+          className="flex items-center hover:text-orange-300 transition-colors px-1"
         >
           <Dot ok={cs.online} />
           <span className="text-orange-500 font-bold uppercase tracking-wider">CS</span>
-          <span className="text-zinc-400 ml-1.5">{cs.online ? "cs1.mohican.xyz" : "down"}</span>
-          {cs.online && <span className="text-zinc-600 ml-1.5">{csLabel}</span>}
+          <span className="text-zinc-500 ml-1.5">{csLabel}</span>
         </a>
+
+        <FadeDivider />
 
         <a
           href="ts3server://ts.mohican.xyz"
-          title={`TeamSpeak · ${tsLabel} — click to join`}
-          className="flex items-center hover:text-sky-300 transition-colors"
+          title="TeamSpeak 3 — click to join"
+          className="flex items-center hover:text-sky-300 transition-colors px-1"
         >
           <Dot ok={ts.online} />
           <span className="text-sky-400 font-bold uppercase tracking-wider">TS</span>
-          <span className="text-zinc-400 ml-1.5">ts.mohican.xyz</span>
-          {ts.online && <span className="text-zinc-600 ml-1.5 truncate max-w-[220px]">{tsLabel}</span>}
+          <span className="text-zinc-500 ml-1.5 truncate max-w-[180px]">{tsLabel}</span>
         </a>
+
+        <FadeDivider />
 
         <a
           href="https://webchat.quakenet.org/?nick=mohican-fan.&channels=mohicans&uio=MTY9dHJ1ZSYyPXRydWUmND10cnVlJjk9dHJ1ZSYxMT0zNjkmMTI9dHJ1ZQ75"
           target="_blank"
           rel="noreferrer"
           title="#mohicans @ QuakeNet — open webchat"
-          className="flex items-center hover:text-violet-300 transition-colors ml-auto"
+          className="flex items-center hover:text-violet-300 transition-colors px-1"
         >
           <Dot ok={true} />
           <span className="text-violet-400 font-bold uppercase tracking-wider">IRC</span>
-          <span className="text-zinc-400 ml-1.5">#mohicans @ QuakeNet ↗</span>
+          <span className="text-zinc-500 ml-1.5">#mohicans</span>
         </a>
       </div>
     </div>

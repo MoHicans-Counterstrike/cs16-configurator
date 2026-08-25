@@ -1,19 +1,22 @@
-name: Deploy MOHICAN Configurator
+name: CI / Deploy MOHICAN Configurator
 
 on:
   push:
     branches: [main]
+  pull_request:
   workflow_dispatch:
 
 permissions:
   contents: read
+  pages: write
+  id-token: write
 
 concurrency:
-  group: deploy-production
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  build-deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -29,23 +32,47 @@ jobs:
       - name: Build (single-file)
         run: npm run build
 
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 7
+
+  deploy:
+    # Only deploy from main when VPS secrets are configured.
+    needs: build
+    if: github.ref == 'refs/heads/main' && vars.DEPLOY_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Check required secrets
+        run: |
+          missing=0
+          for s in DEPLOY_SSH_KEY DEPLOY_HOST DEPLOY_USER; do
+            if [ -z "${{ secrets[s] }}" ]; then
+              echo "::error::Secret $s is not set — add it in Repo Settings > Secrets and variables > Actions"
+              missing=1
+            fi
+          done
+          exit $missing
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+
       - name: Set up SSH key
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/id_ed25519
+          printf '%s\n' "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -H ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan -H ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
 
       - name: Deploy to VPS
         run: |
           ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} "mkdir -p /home/ninja/cs16-config/images"
-          scp dist/index.html ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:/home/ninja/cs16-config/index.html
-          scp -r public/images/* ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:/home/ninja/cs16-config/images/ || true
-
-      - name: Restart status poller
-        run: |
-          ssh ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} \
-            "systemctl --user restart mohican-status || true"
+          scp index.html ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:/home/ninja/cs16-config/index.html
+          scp -r images/* ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:/home/ninja/cs16-config/images/ 2>/dev/null || true
 
       - name: Smoke test
         run: |

@@ -12,6 +12,7 @@ import NetworkTicker from "./components/NetworkTicker";
 import CrosshairPreview from "./components/CrosshairPreview";
 import EdpiMeter from "./components/EdpiMeter";
 import LegendsSidebar from "./components/LegendsSidebar";
+import DemoUploader from "./components/DemoUploader";
 import { encodeState, decodeState } from "./utils/urlState";
 import { getLegendById } from "./data/legends";
 
@@ -283,7 +284,7 @@ export default function App() {
           <div className="w-full flex items-end justify-between flex-wrap gap-6">
             <div className="min-w-0">
               <div className="flex items-center gap-3 mb-2">
-                <div className="w-9 h-9 rounded bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-content text-lg font-black text-zinc-950 shadow-[0_0_25px_rgba(251,146,60,0.4)] flex-shrink-0">
+                <div className="w-9 h-9 rounded bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-center text-lg font-black text-zinc-950 shadow-[0_0_25px_rgba(251,146,60,0.4)] flex-shrink-0 leading-none">
                   1.6
                 </div>
                 <span className="text-[10px] sm:text-xs text-orange-400 font-mono tracking-[0.24em] uppercase">
@@ -452,6 +453,17 @@ export default function App() {
               </div>
             </div>
 
+            {/* Demo analyzer */}
+            <div className="bg-zinc-900/50 border border-zinc-800 rounded-lg overflow-hidden backdrop-blur">
+              <div className="px-4 py-3 border-b border-zinc-800 bg-zinc-900/80">
+                <p className="text-xs font-mono text-zinc-500 uppercase tracking-wider">Demo Analyzer</p>
+                <p className="text-xs text-zinc-400 mt-0.5">drop a .dem — parsed locally</p>
+              </div>
+              <div className="p-3">
+                <DemoUploader />
+              </div>
+            </div>
+
             <div className="bg-zinc-900/50 border border-zinc-800 rounded-lg overflow-hidden backdrop-blur">
               <div className="px-4 py-3 border-b border-zinc-800 bg-zinc-900/80 flex items-center justify-between">
                 <div>
@@ -506,7 +518,24 @@ export default function App() {
 
         <footer className="mt-3 pb-4 text-center">
           <p className="text-[10px] text-zinc-700 font-mono">
-            // MOHICAN CS 1.6 CONFIGURATOR · BUILT FOR COMPETITORS · cfg.mohican.xyz
+            // MOHICAN CS 1.6 CONFIGURATOR · BUILT FOR COMPETITORS ·{" "}
+            <a
+              href="https://github.com/svdbrom/counterstrike/actions/workflows/deploy.yml"
+              target="_blank"
+              rel="noreferrer"
+              className="text-zinc-600 hover:text-orange-400 transition-colors underline decoration-dotted"
+            >
+              build &amp; deploy status ↗
+            </a>{" "}
+            ·{" "}
+            <a
+              href="https://github.com/svdbrom/counterstrike"
+              target="_blank"
+              rel="noreferrer"
+              className="text-zinc-600 hover:text-orange-400 transition-colors underline decoration-dotted"
+            >
+              source ↗
+            </a>
           </p>
         </footer>
       </div>
