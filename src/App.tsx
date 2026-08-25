@@ -172,6 +172,7 @@ export default function App() {
   });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const [activeTab, setActiveTab] = useState(categories[0].id);
+  const [pageTab, setPageTab] = useState<"config" | "binds">("config");
   const [copied, setCopied] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
   const [crtMode, setCrtMode] = useState<"mild" | "full">("mild");
@@ -313,6 +314,36 @@ export default function App() {
       </header>
 
       <div className="max-w-7xl mx-auto px-4 py-4">
+        {/* Page tabs */}
+        <div className="mb-3 flex gap-1 border-b border-zinc-800">
+          <button
+            onClick={() => setPageTab("config")}
+            className={cn(
+              "px-4 py-2 text-xs font-mono uppercase tracking-wider transition-colors border-b-2 -mb-px",
+              pageTab === "config"
+                ? "border-orange-500 text-orange-300"
+                : "border-transparent text-zinc-500 hover:text-zinc-300"
+            )}
+          >
+            Config Generator
+          </button>
+          <button
+            onClick={() => setPageTab("binds")}
+            className={cn(
+              "px-4 py-2 text-xs font-mono uppercase tracking-wider transition-colors border-b-2 -mb-px",
+              pageTab === "binds"
+                ? "border-orange-500 text-orange-300"
+                : "border-transparent text-zinc-500 hover:text-zinc-300"
+            )}
+          >
+            Binds &amp; Buy Menu
+          </button>
+        </div>
+
+        {pageTab === "binds" ? (
+          <BindsBuilder />
+        ) : (
+        <>
         {/* Presets — single compact line */}
         <div className="mb-3 flex items-center gap-2 flex-wrap">
           <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider">Presets:</span>
@@ -538,6 +569,8 @@ export default function App() {
             </a>
           </p>
         </footer>
+        </>
+        )}
       </div>
     </div>
   );
