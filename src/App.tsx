@@ -19,7 +19,10 @@ import Leaderboard from "./components/Leaderboard";
 import NetcodeCalc from "./components/NetcodeCalc";
 import LaunchOptions from "./components/LaunchOptions";
 import ProConfigs from "./components/ProConfigs";
-import ConfigBattle from "./components/ConfigBattle";
+import ProDatabase from "./components/ProDatabase";
+import WeaponDatabase from "./components/WeaponDatabase";
+import NetGraphAnalyzer from "./components/NetGraphAnalyzer";
+import CrosshairGallery from "./components/CrosshairGallery";
 import ServerBrowser from "./components/ServerBrowser";
 import RoundTimer from "./components/RoundTimer";
 import { encodeState, decodeState } from "./utils/urlState";
@@ -181,7 +184,7 @@ export default function App() {
   });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const [activeTab, setActiveTab] = useState(categories[0].id);
-  const [pageTab, setPageTab] = useState<"config" | "binds" | "rank" | "demo" | "netcode" | "launch" | "proconfigs" | "battle" | "server" | "timer">("config");
+  const [pageTab, setPageTab] = useState<"config" | "binds" | "rank" | "demo" | "netcode" | "launch" | "proconfigs" | "prodb" | "weapons" | "netgraph" | "crosshair" | "server" | "timer">("config");
   const [copied, setCopied] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
   const [crtMode, setCrtMode] = useState<"off" | "mild" | "full">("mild");
@@ -330,8 +333,10 @@ export default function App() {
             { id: "demo", label: "Demo" },
             { id: "netcode", label: "Netcode" },
             { id: "launch", label: "Launch Options" },
-            { id: "proconfigs", label: "Pro Configs" },
-            { id: "battle", label: "Battle" },
+            { id: "prodb", label: "Pro Database" },
+            { id: "weapons", label: "Weapons" },
+            { id: "netgraph", label: "Net Graph" },
+            { id: "crosshair", label: "Crosshair" },
             { id: "server", label: "Server" },
             { id: "timer", label: "Timer" },
           ] as const).map((t) => (
@@ -369,7 +374,10 @@ export default function App() {
         {pageTab === "netcode" && <NetcodeCalc />}
         {pageTab === "launch" && <LaunchOptions />}
         {pageTab === "proconfigs" && <ProConfigs />}
-        {pageTab === "battle" && <ConfigBattle />}
+        {pageTab === "prodb" && <ProDatabase />}
+        {pageTab === "weapons" && <WeaponDatabase />}
+        {pageTab === "netgraph" && <NetGraphAnalyzer />}
+        {pageTab === "crosshair" && <CrosshairGallery />}
         {pageTab === "server" && <ServerBrowser />}
         {pageTab === "timer" && <RoundTimer />}
 
