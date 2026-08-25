@@ -316,82 +316,8 @@ export default function App() {
       </header>
 
       <div className="max-w-7xl mx-auto px-4 py-4">
-        {/* Single compact bar: Presets — Counter (right) — CRT toggle */}
-        <div className="mb-3 flex items-center gap-2 flex-wrap">
-          <span className="text-[10px] font-mono text-zinc-300 uppercase tracking-wider">Presets:</span>
-          <div className="flex gap-1.5 flex-wrap">
-            {presets.map((preset) => (
-              <button
-                key={preset.id}
-                onClick={() => handlePreset(preset.id)}
-                title={preset.description}
-                className="group relative px-2.5 py-1 rounded border border-zinc-700 hover:border-orange-500 bg-zinc-900/50 hover:bg-zinc-900 text-zinc-300 hover:text-amber-100 text-xs font-mono transition-all flex items-center gap-1.5"
-              >
-                <span>{preset.icon}</span>
-                <span>{preset.name}</span>
-              </button>
-            ))}
-          </div>
-          <div className="ml-auto flex items-center gap-2">
-            {downloadCount !== null && (
-              <span className="text-[10px] text-orange-400/80 font-mono">
-                ⬇ {downloadCount.toLocaleString()} configs generated
-              </span>
-            )}
-            <button
-              onClick={() =>
-                setCrtMode((m) => (m === "off" ? "mild" : m === "mild" ? "full" : "off"))
-              }
-              title="CRT scanline effect (off / mild / full)"
-              className={cn(
-                "px-2.5 py-1 rounded text-xs font-mono border transition-colors",
-                crtMode === "off"
-                  ? "border-zinc-700 text-zinc-300"
-                  : crtMode === "full"
-                  ? "border-orange-500 text-orange-300 bg-orange-500/10"
-                  : "border-zinc-600 text-zinc-300"
-              )}
-            >
-              📺 CRT: {crtMode.toUpperCase()}
-            </button>
-          </div>
-        </div>
-
-        {/* Action bar — prominent, always visible above the settings grid */}
-        <div className="mb-4 flex gap-2 flex-wrap items-center bg-zinc-900/60 border border-zinc-700 rounded-lg px-3 py-2.5 sticky top-0 z-30 backdrop-blur">
-          <span className="text-[10px] font-mono text-zinc-300 uppercase tracking-widest mr-1 hidden sm:inline">
-            Actions
-          </span>
-          <button
-            onClick={handleDownload}
-            className="px-5 py-2 rounded bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-400 hover:to-amber-400 text-zinc-950 font-bold text-sm transition-all shadow-[0_0_20px_rgba(251,146,60,0.35)] hover:shadow-[0_0_30px_rgba(251,146,60,0.55)]"
-          >
-            ↓ DOWNLOAD autoexec.cfg
-          </button>
-          <button
-            onClick={handleCopy}
-            className="px-4 py-2 rounded border border-orange-500/50 hover:bg-orange-500/10 text-orange-300 hover:text-orange-200 text-sm font-mono transition-colors"
-          >
-            {copied ? "✓ COPIED" : "COPY CONFIG"}
-          </button>
-          <button
-            onClick={handleShare}
-            className="px-4 py-2 rounded border border-sky-500/50 hover:bg-sky-500/10 text-sky-300 hover:text-sky-200 text-sm font-mono transition-colors"
-            title="Copy a link that restores this exact config"
-          >
-            {shareCopied ? "✓ LINK COPIED" : "🔗 SHARE"}
-          </button>
-          <div className="flex-1" />
-          <button
-            onClick={handleReset}
-            className="px-3 py-2 rounded border border-zinc-700 hover:border-red-500/50 text-zinc-300 hover:text-red-300 text-xs font-mono transition-colors"
-          >
-            RESET
-          </button>
-        </div>
-
         {/* Page tabs — clean underline bar */}
-        <div className="mb-3 flex gap-1 border-b border-zinc-800 overflow-x-auto">
+        <div className="mb-3 flex gap-1 border-b border-zinc-800">
           {([
             { id: "config", label: "Config Generator" },
             { id: "binds", label: "Binds & Buy Menu" },
@@ -406,7 +332,7 @@ export default function App() {
                 "px-4 py-2 text-xs font-mono uppercase tracking-wider transition-colors border-b-2 -mb-px whitespace-nowrap",
                 pageTab === t.id
                   ? "border-orange-500 text-orange-300"
-                  : "border-transparent text-zinc-300 hover:text-zinc-300"
+                  : "border-transparent text-zinc-300 hover:text-zinc-100"
               )}
             >
               {t.label}
@@ -454,13 +380,53 @@ export default function App() {
         {pageTab === "config" && (
         <>
         {/* Action bar */}
-        <div className="mb-4 flex gap-2 flex-wrap items-center bg-zinc-900/60 border border-zinc-700 rounded-lg px-3 py-2.5 sticky top-0 z-30 backdrop-blur">
-          <span className="text-[10px] font-mono text-zinc-300 uppercase tracking-widest mr-1 hidden sm:inline">Actions</span>
+        <div className="mb-3 flex gap-2 flex-wrap items-center bg-zinc-900/60 border border-zinc-700 rounded-lg px-3 py-2.5">
           <button onClick={handleDownload} className="px-5 py-2 rounded bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-400 hover:to-amber-400 text-zinc-950 font-bold text-sm transition-all shadow-[0_0_20px_rgba(251,146,60,0.35)]">↓ DOWNLOAD autoexec.cfg</button>
           <button onClick={handleCopy} className="px-4 py-2 rounded border border-orange-500/50 hover:bg-orange-500/10 text-orange-300 hover:text-orange-200 text-sm font-mono transition-colors">{copied ? "✓ COPIED" : "COPY CONFIG"}</button>
           <button onClick={handleShare} className="px-4 py-2 rounded border border-sky-500/50 hover:bg-sky-500/10 text-sky-300 hover:text-sky-200 text-sm font-mono transition-colors" title="Copy a link that restores this exact config">{shareCopied ? "✓ LINK COPIED" : "🔗 SHARE"}</button>
           <div className="flex-1" />
           <button onClick={handleReset} className="px-3 py-2 rounded border border-zinc-700 hover:border-red-500/50 text-zinc-300 hover:text-red-300 text-xs font-mono transition-colors">RESET</button>
+        </div>
+
+        {/* Presets + Counter + CRT */}
+        <div className="mb-3 flex items-center gap-2 flex-wrap">
+          <span className="text-[10px] font-mono text-zinc-300 uppercase tracking-wider">Presets:</span>
+          <div className="flex gap-1.5 flex-wrap">
+            {presets.map((preset) => (
+              <button
+                key={preset.id}
+                onClick={() => handlePreset(preset.id)}
+                title={preset.description}
+                className="group relative px-2.5 py-1 rounded border border-zinc-700 hover:border-orange-500 bg-zinc-900/50 hover:bg-zinc-900 text-zinc-300 hover:text-amber-100 text-xs font-mono transition-all flex items-center gap-1.5"
+              >
+                <span>{preset.icon}</span>
+                <span>{preset.name}</span>
+              </button>
+            ))}
+          </div>
+          <div className="ml-auto flex items-center gap-2">
+            {downloadCount !== null && (
+              <span className="text-[10px] text-orange-400/80 font-mono">
+                ⬇ {downloadCount.toLocaleString()} configs generated
+              </span>
+            )}
+            <button
+              onClick={() =>
+                setCrtMode((m) => (m === "off" ? "mild" : m === "mild" ? "full" : "off"))
+              }
+              title="CRT scanline effect (off / mild / full)"
+              className={cn(
+                "px-2.5 py-1 rounded text-xs font-mono border transition-colors",
+                crtMode === "off"
+                  ? "border-zinc-700 text-zinc-300"
+                  : crtMode === "full"
+                  ? "border-orange-500 text-orange-300 bg-orange-500/10"
+                  : "border-zinc-600 text-zinc-300"
+              )}
+            >
+              📺 CRT: {crtMode.toUpperCase()}
+            </button>
+          </div>
         </div>
 
         <div className="grid lg:grid-cols-[260px_1fr_380px] gap-4">
