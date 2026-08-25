@@ -17,6 +17,11 @@ import ConfigUploader from "./components/ConfigUploader";
 import BindsBuilder from "./components/BindsBuilder";
 import Leaderboard from "./components/Leaderboard";
 import NetcodeCalc from "./components/NetcodeCalc";
+import LaunchOptions from "./components/LaunchOptions";
+import ProConfigs from "./components/ProConfigs";
+import ConfigBattle from "./components/ConfigBattle";
+import ServerBrowser from "./components/ServerBrowser";
+import RoundTimer from "./components/RoundTimer";
 import { encodeState, decodeState } from "./utils/urlState";
 import { getLegendById } from "./data/legends";
 
@@ -176,7 +181,7 @@ export default function App() {
   });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const [activeTab, setActiveTab] = useState(categories[0].id);
-  const [pageTab, setPageTab] = useState<"config" | "binds" | "rank" | "demo" | "netcode">("config");
+  const [pageTab, setPageTab] = useState<"config" | "binds" | "rank" | "demo" | "netcode" | "launch" | "proconfigs" | "battle" | "server" | "timer">("config");
   const [copied, setCopied] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
   const [crtMode, setCrtMode] = useState<"off" | "mild" | "full">("mild");
@@ -319,17 +324,22 @@ export default function App() {
         {/* Page tabs — clean underline bar */}
         <div className="mb-3 flex gap-1 border-b border-zinc-800">
           {([
-            { id: "config", label: "Config Generator" },
-            { id: "binds", label: "Binds & Buy Menu" },
+            { id: "config", label: "Config" },
+            { id: "binds", label: "Binds & Buy" },
             { id: "rank", label: "Rangliste" },
-            { id: "demo", label: "Demo Analyzer" },
+            { id: "demo", label: "Demo" },
             { id: "netcode", label: "Netcode" },
+            { id: "launch", label: "Launch Options" },
+            { id: "proconfigs", label: "Pro Configs" },
+            { id: "battle", label: "Battle" },
+            { id: "server", label: "Server" },
+            { id: "timer", label: "Timer" },
           ] as const).map((t) => (
             <button
               key={t.id}
               onClick={() => setPageTab(t.id as any)}
               className={cn(
-                "px-4 py-2 text-xs font-mono uppercase tracking-wider transition-colors border-b-2 -mb-px whitespace-nowrap",
+                "px-3 py-2 text-xs font-mono uppercase tracking-wider transition-colors border-b-2 -mb-px whitespace-nowrap",
                 pageTab === t.id
                   ? "border-orange-500 text-orange-300"
                   : "border-transparent text-zinc-300 hover:text-zinc-100"
@@ -340,43 +350,29 @@ export default function App() {
           ))}
         </div>
 
-        {/* TAB: Binds & Buy Menu */}
         {pageTab === "binds" && <BindsBuilder />}
-
-        {/* TAB: Rangliste */}
         {pageTab === "rank" && <Leaderboard />}
-
-        {/* TAB: Demo Analyzer */}
         {pageTab === "demo" && (
           <div className="grid md:grid-cols-2 gap-4">
             <div>
               <DemoUploader />
               <p className="mt-3 text-[10px] font-mono text-zinc-300 leading-relaxed">
-                Drop any .dem from Counter-Strike (1.6, CZ, Condition Zero) or other GoldSrc
-                games. Header is read locally — nothing is uploaded.
+                Drop any .dem from Counter-Strike (1.6, CZ, Condition Zero) or other GoldSrc games. Header is read locally — nothing is uploaded.
               </p>
             </div>
             <div className="bg-zinc-900/40 border border-zinc-800 rounded-lg p-4 text-[11px] font-mono text-zinc-300 space-y-2">
               <p className="text-orange-400 text-xs uppercase tracking-wider">About CS 1.6 demos</p>
-              <p>
-                <code className="text-amber-300">.dem</code> files record every player's
-                actions on the server. The 600-byte header carries map, mod and timing info.
-              </p>
-              <p>
-                For full event extraction (K/D, chat, round scores) use{" "}
-                <a href="https://github.com/YaLTeR/hldemo-rs" target="_blank" rel="noreferrer" className="text-sky-400 underline decoration-dotted">
-                  hldemo-rs
-                </a>{" "}
-                on the server side.
-              </p>
+              <p><code className="text-amber-300">.dem</code> files record every player's actions on the server.</p>
             </div>
           </div>
         )}
-
-        {/* TAB: Netcode */}
         {pageTab === "netcode" && <NetcodeCalc />}
+        {pageTab === "launch" && <LaunchOptions />}
+        {pageTab === "proconfigs" && <ProConfigs />}
+        {pageTab === "battle" && <ConfigBattle />}
+        {pageTab === "server" && <ServerBrowser />}
+        {pageTab === "timer" && <RoundTimer />}
 
-        {/* TAB: Config Generator (default) */}
         {pageTab === "config" && (
         <>
         {/* Action bar */}
