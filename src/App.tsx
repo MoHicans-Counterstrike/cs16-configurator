@@ -204,6 +204,31 @@ export default function App() {
     window.location.hash = pageTab;
   }, [pageTab]);
 
+  // Dynamic title + meta description per tab (SEO)
+  useEffect(() => {
+    const titles: Record<string, { title: string; desc: string }> = {
+      config: { title: "Config Builder — MOHICAN CS 1.6 Configurator", desc: "Build your competitive CS 1.6 autoexec.cfg: 60+ tunable cvars for performance, network, mouse, video, HUD and sound. Live preview, pro presets, one-click download." },
+      binds: { title: "Binds & Buy Scripts — MOHICAN CS 1.6 Configurator", desc: "Create keyboard buy binds and custom key bindings for CS 1.6. Quick-reference for weapon purchases, equipment binds, and utility hotkeys." },
+      server: { title: "Live Server Status — MOHICAN CS 1.6 Configurator", desc: "Real-time Mohican CS 1.6 server status: current map, player count, live map pool rotation. Connect directly via cs1.mohican.xyz:27015." },
+      rank: { title: "Leaderboard & Ranks — MOHICAN CS 1.6 Configurator", desc: "Mohican community leaderboard: top players, K/D ratios, headshot percentages and competitive rankings from our CS 1.6 servers." },
+      demo: { title: "Demo Analyzer — MOHICAN CS 1.6 Configurator", desc: "Analyze Counter-Strike 1.6 demo files (.dem) in your browser. Read headers, player stats, kill lists — nothing uploaded, fully local." },
+      netcode: { title: "Netcode Calculator — MOHICAN CS 1.6 Configurator", desc: "Calculate optimal CS 1.6 network settings: rate, cl_cmdrate, cl_updaterate, ex_interp. Minimize lag, maximize hit registration for your connection." },
+      launch: { title: "Launch Options — MOHICAN CS 1.6 Configurator", desc: "Essential Steam launch options for CS 1.6: -novid, -console, -freq, -tickrate, +fps_max. Copy-paste ready commands for competitive play." },
+      proconfigs: { title: "Pro Player Configs — MOHICAN CS 1.6 Configurator", desc: "Download authentic configs from CS 1.6 legends: HeatoN, f0rest, Neo, GeT_RiGhT, markeloff. Exact settings used by the pros." },
+      prodb: { title: "Pro Database — MOHICAN CS 1.6 Configurator", desc: "Counter-Strike 1.6 pro player database: teams, countries, weapon preferences, crosshair settings and sensitivity from 20+ legendary players." },
+      weapons: { title: "Weapon Database — MOHICAN CS 1.6 Configurator", desc: "Complete CS 1.6 weapon database: damage, armor penetration, price, kill award, recoil patterns and buy menu shortcuts for every weapon." },
+      netgraph: { title: "Net Graph Analyzer — MOHICAN CS 1.6 Configurator", desc: "Understand CS 1.6 net graph readings: loss, choke, ping, tick. Diagnose connection issues and optimize your network settings." },
+      crosshair: { title: "Crosshair Gallery — MOHICAN CS 1.6 Configurator", desc: "Browse 14 pro crosshair presets, test them on dust2/inferno/nuke/train scenes, copy console commands. Find your perfect crosshair." },
+      ts3: { title: "TeamSpeak — MOHICAN CS 1.6 Configurator", desc: "Connect to the Mohican TeamSpeak 3 server. Live channel list, user count, direct join link. Coordinate with your team in real-time." },
+      timer: { title: "Round Timer — MOHICAN CS 1.6 Configurator", desc: "CS 1.6 round timer utility: bomb timer, buy time, freeze time countdown. Practice your timings and improve map awareness." },
+    };
+    const meta = titles[pageTab] || titles.config;
+    document.title = meta.title;
+    let md = document.querySelector('meta[name="description"]');
+    if (!md) { md = document.createElement("meta"); md.setAttribute("name", "description"); document.head.appendChild(md); }
+    md.setAttribute("content", meta.desc);
+  }, [pageTab]);
+
   // fetch download counter once
   useEffect(() => {
     fetch("/api/count", { cache: "no-store" })
@@ -358,6 +383,8 @@ export default function App() {
             <button
               key={t.id}
               onClick={() => setPageTab(t.id as any)}
+              aria-label={`Navigate to ${t.label} tab`}
+              aria-current={pageTab === t.id ? "page" : undefined}
               className={cn(
                 "px-3 py-2 text-xs font-mono uppercase tracking-wider transition-colors border-b-2 -mb-px whitespace-nowrap",
                 pageTab === t.id
@@ -457,7 +484,7 @@ export default function App() {
               </div>
               <div className="p-2">
                 {categories.map((cat) => (
-                  <button key={cat.id} onClick={() => setActiveTab(cat.id)} className={cn("w-full text-left px-3 py-2.5 rounded flex items-center gap-3 mb-1 transition-all group", activeTab === cat.id ? "bg-gradient-to-r from-orange-500/20 to-transparent border-l-2 border-orange-500 text-amber-100" : "hover:bg-zinc-800/50 text-zinc-300 hover:text-amber-100")}>
+                  <button key={cat.id} onClick={() => setActiveTab(cat.id)} aria-label={`Show ${cat.name} settings category`} className={cn("w-full text-left px-3 py-2.5 rounded flex items-center gap-3 mb-1 transition-all group", activeTab === cat.id ? "bg-gradient-to-r from-orange-500/20 to-transparent border-l-2 border-orange-500 text-amber-100" : "hover:bg-zinc-800/50 text-zinc-300 hover:text-amber-100")}>
                     <span className="text-xl">{cat.icon}</span>
                     <div className="flex-1 min-w-0">
                       <div className="font-medium text-sm">{cat.name}</div>
