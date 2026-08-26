@@ -2,6 +2,7 @@
 
 **The competitive config generator for Counter-Strike 1.6**
 
+[![CI / Deploy](https://github.com/MoHicans-Counterstrike/cs16-configurator/actions/workflows/deploy.yml/badge.svg)](https://github.com/MoHicans-Counterstrike/cs16-configurator/actions/workflows/deploy.yml)
 [![Counter-Strike](https://img.shields.io/badge/Counter--Strike-1.6-555555)](https://store.steampowered.com/app/10/CounterStrike/)
 [![Engine](https://img.shields.io/badge/Engine-GoldSrc-555555)](https://en.wikipedia.org/wiki/GoldSrc)
 [![React](https://img.shields.io/badge/React-18-555555)](https://react.dev/)

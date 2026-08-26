@@ -539,7 +539,7 @@ export default function App() {
           <p className="text-[10px] text-zinc-700 font-mono">
             // MOHICAN CS 1.6 CONFIGURATOR · BUILT FOR COMPETITORS ·{" "}
             <a
-              href="https://github.com/svdbrom/counterstrike/actions/workflows/deploy.yml"
+              href="https://github.com/MoHicans-Counterstrike/cs16-configurator/actions/workflows/deploy.yml"
               target="_blank"
               rel="noreferrer"
               className="text-zinc-600 hover:text-orange-400 transition-colors underline decoration-dotted"
@@ -548,7 +548,7 @@ export default function App() {
             </a>{" "}
             ·{" "}
             <a
-              href="https://github.com/svdbrom/counterstrike"
+              href="https://github.com/MoHicans-Counterstrike/cs16-configurator"
               target="_blank"
               rel="noreferrer"
               className="text-zinc-600 hover:text-orange-400 transition-colors underline decoration-dotted"

@@ -8,7 +8,7 @@ import net from "node:net";
 import * as gamedigPkg from "gamedig";
 const GameDig = gamedigPkg.GameDig ?? gamedigPkg.default ?? gamedigPkg;
 
-const CS_HOST = process.env.CS_HOST || "217.160.10.128";
+const CS_HOST = process.env.CS_HOST || "195.90.220.99";
 const CS_PORT = Number(process.env.CS_PORT || 27015);
 const TS_HOST = process.env.TS_HOST || "127.0.0.1"; // ts3-server runs on this host; query port bound to loopback only
 const TS_QPORT = Number(process.env.TS_QPORT || 10011);

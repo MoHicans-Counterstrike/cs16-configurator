@@ -36,7 +36,7 @@ function getMapPreview(map: string): string {
 }
 
 const SERVERS: Omit<ServerInfo, "online" | "map" | "players" | "maxPlayers">[] = [
-  { id: "mohican", name: "#CS 1 ~ #MoHicans CS 1.6", address: "cs1.mohican.xyz", ip: "217.160.10.128", port: 27015, location: "🇩🇪 Germany", featured: true },
+  { id: "mohican", name: "#CS 1 ~ #MoHicans CS 1.6", address: "cs1.mohican.xyz", ip: "195.90.220.99", port: 27015, location: "🇩🇪 Germany", featured: true },
   { id: "dzg", name: "#1 DzG [Public] #FreePalestine", address: "179.61.132.114", ip: "179.61.132.114", port: 27015, location: "🇩🇪 Germany" },
   { id: "wolves1", name: "Wolves | Assault 1000 FPS #1", address: "37.114.53.187", ip: "37.114.53.187", port: 27015, location: "🇩🇪 Germany" },
   { id: "wolves2", name: "Wolves | Dust 1000 FPS #2", address: "37.114.53.187", ip: "37.114.53.187", port: 27018, location: "🇩🇪 Germany" },
