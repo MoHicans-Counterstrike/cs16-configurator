@@ -16,19 +16,42 @@ type ServerInfo = {
   featured?: boolean;
 };
 
-// Map preview images (real CS 1.6 screenshots)
+// Map preview images (real CS 1.6 screenshots, sourced from varq.net + GameBanana)
 const MAP_PREVIEW: Record<string, string> = {
-  de_dust: "/maps/dust.jpg",
-  de_dust2: "/maps/dust.jpg",
-  de_inferno: "/maps/chateau.jpg",
-  de_nuke: "/maps/office.jpg",
-  de_train: "/maps/chateau.jpg",
-  de_aztec: "/maps/dust.jpg",
-  cs_office: "/maps/office.jpg",
-  cs_italy: "/maps/italy.jpg",
-  cs_assault: "/maps/chateau.jpg",
-  de_chateau: "/maps/chateau.jpg",
-  unknown: "/maps/dust.jpg",
+  // Mohican mappool — exact matches
+  fy_pool_day: "/maps/fy_pool_day.jpg",
+  "aim_ak-colt": "/maps/aim_ak-colt.jpg",
+  fy_iceworld: "/maps/fy_iceworld.jpg",
+  fy_iceworld2k: "/maps/fy_iceworld2k.jpg",
+  cs_assault: "/maps/cs_assault.jpg",
+  de_aztec: "/maps/de_aztec.jpg",
+  aim_map_usp: "/maps/aim_map_usp.jpg",
+  de_inferno: "/maps/de_inferno.jpg",
+  awp_map: "/maps/awp_map.jpg",
+  de_dust: "/maps/de_dust.jpg",
+  fy_snow: "/maps/fy_snow.jpg",
+  de_dust2: "/maps/de_dust2.jpg",
+  aim_map: "/maps/aim_map.jpg",
+  cs_deagle5: "/maps/cs_deagle5.jpg",
+  de_rats: "/maps/de_rats.jpg",
+  awp_india: "/maps/awp_india.jpg",
+  de_cpl_mill: "/maps/de_cpl_mill.jpg",
+  surf_ninja: "/maps/surf_ninja.jpg",
+  aim_pistols: "/maps/aim_pistols.jpg",
+  "2d_mario": "/maps/2d_mario.jpg",
+  cs_italy: "/maps/cs_italy.jpg",
+  de_cpl_strike: "/maps/de_cpl_strike.jpg",
+  de_forge: "/maps/de_forge.jpg",
+  de_russke: "/maps/de_russke.jpg",
+  de_tuscan: "/maps/de_tuscan.jpg",
+  de_train: "/maps/de_train.jpg",
+  fy_simpsons: "/maps/fy_simpsons.jpg",
+  surf_tutorial: "/maps/surf_tutorial.jpg",
+  // other servers / fallbacks
+  de_nuke: "/maps/de_inferno.jpg",
+  cs_office: "/maps/cs_italy.jpg",
+  de_chateau: "/maps/de_tuscan.jpg",
+  unknown: "/maps/de_dust2.jpg",
 };
 
 function getMapPreview(map: string): string {
